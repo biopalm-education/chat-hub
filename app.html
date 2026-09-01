@@ -264,6 +264,8 @@ footer{border-top:1px solid var(--line);padding:20px 0 42px;color:var(--ink-3);f
 <div class="wrap">
  <section id="s-key"><div class="shead"><h2>สรุปสำคัญ</h2><span class="lab" id="keyscope"></span></div><div id="key"></div></section>
  <section id="s-kpi"><div class="shead"><h2>ตัวเลขสำคัญ</h2><span class="lab">เฉพาะแชทที่สนใจคอร์ส</span></div><div class="kpis" id="kpi"></div></section>
+  <section id="s-mix"><div class="shead"><h2>ที่มาของแชทเดือนนี้</h2><span class="lab">ใครเป็นฝ่ายเริ่ม</span></div>
+  <p class="note">แยกว่าแชทในเดือนนั้นเกิดจากลูกค้าทักเข้ามาใหม่ ลูกค้าเก่าทักกลับมาเอง หรือแอดมินเป็นฝ่ายตามเอง — ฝั่ง Facebook แยกได้ว่าคนที่ทักใหม่มาจากโฆษณาหรือไม่ ส่วน Instagram นับเฉพาะแชทที่สนใจคอร์ส และยังแยกที่มาโฆษณาไม่ได้</p><div class="tw"><table id="mix"></table></div></section>
  <section id="s-cmp"><div class="shead"><h2>เทียบ Instagram กับ Facebook</h2><span class="lab">กรกฎาคม 2026</span></div>
   <p class="note">เดือนกรกฎาคมเป็นเดือนเดียวที่มีข้อมูลครบทั้งสองช่องทาง จึงเป็นเดือนเดียวที่เทียบกันได้ตรง ๆ</p><div id="cmp"></div></section>
  <section id="s-fun"><div class="shead"><h2>กรวยการขาย</h2><span class="lab">S2 → S5</span></div>
@@ -468,6 +470,26 @@ function renderFunnel(){
  }).join('');
 }
 
+/* ---------- source mix ---------- */
+const MIXL=[['na','ทักใหม่ · มาจากโฆษณา','ลูกค้าเริ่มก่อน'],['nc','ทักใหม่ · จากคอมเมนต์ใต้โพสต์','ลูกค้าเริ่มก่อน'],
+ ['no','ทักใหม่ · ออร์แกนิก','ลูกค้าเริ่มก่อน'],['nu','ทักใหม่ · ไม่ระบุที่มา (IG)','ลูกค้าเริ่มก่อน'],
+ ['rb','ลูกค้าเก่าทักกลับมาเอง','ลูกค้าเริ่มก่อน'],['fr','แอดมินตามเอง · ลูกค้าตอบกลับ','แอดมินเริ่มก่อน'],
+ ['fs','แอดมินตามเอง · ลูกค้าเงียบ','แอดมินเริ่มก่อน']];
+function renderMix(){
+ const p=pool(); const m={};
+ for(const a of p)for(const [k,v] of Object.entries(a.mix||{}))m[k]=(m[k]||0)+v;
+ const tot=Object.values(m).reduce((t,v)=>t+v,0);
+ const S=document.getElementById('s-mix'); if(S)S.hidden=!tot;
+ if(!tot){$('#mix').innerHTML='';return;}
+ const nw=['na','nc','no','nu'].reduce((t,k)=>t+(m[k]||0),0);
+ const fu=['fr','fs'].reduce((t,k)=>t+(m[k]||0),0);
+ $('#mix').innerHTML='<thead><tr><th>ที่มา</th><th>ใครเริ่มก่อน</th><th class="n">แชท</th><th class="n">%</th></tr></thead><tbody>'
+  + MIXL.filter(([k])=>m[k]).map(([k,l,w])=>`<tr><td>${l}</td><td style="color:var(--ink-3)">${w}</td><td class="n">${nf(m[k])}</td><td class="n">${pc(m[k],tot)}</td></tr>`).join('')
+  + `<tr><td style="border-top:2px solid var(--line)"><b>ลูกค้าทักเข้ามาเอง</b></td><td style="border-top:2px solid var(--line)"></td><td class="n" style="border-top:2px solid var(--line)"><b>${nf(nw+(m.rb||0))}</b></td><td class="n" style="border-top:2px solid var(--line)"><b>${pc(nw+(m.rb||0),tot)}</b></td></tr>`
+  + `<tr><td><b>แอดมินตามเอง</b></td><td></td><td class="n"><b>${nf(fu)}</b></td><td class="n"><b>${pc(fu,tot)}</b></td></tr>`
+  + `<tr><td><b>รวมทุกแชท</b></td><td></td><td class="n"><b>${nf(tot)}</b></td><td class="n"></td></tr></tbody>`;
+}
+
 /* ---------- reasons ---------- */
 function renderWhy(){
  const p=pool(); const m={};
@@ -648,10 +670,10 @@ function renderRaw(){
 }
 
 /* ---------- orchestration ---------- */
-function renderOverview(){renderKey();renderKPI();renderCmp();renderFunnel();renderWhy();renderHours();}
+function renderOverview(){renderKey();renderKPI();renderMix();renderCmp();renderFunnel();renderWhy();renderHours();}
 function applyView(){
  const ov=VIEW==='ov';
- ['s-key','s-kpi','s-cmp','s-fun','s-why','s-day'].forEach(id=>{const e=document.getElementById(id);if(e)e.hidden=!ov;});
+ ['s-key','s-kpi','s-mix','s-cmp','s-fun','s-why','s-day'].forEach(id=>{const e=document.getElementById(id);if(e)e.hidden=!ov;});
  $('#s-raw').hidden=ov;
  if(ov){renderOverview();}else{renderRaw();}
 }
