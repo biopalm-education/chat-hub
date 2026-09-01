@@ -280,6 +280,7 @@ footer{border-top:1px solid var(--line);padding:20px 0 42px;color:var(--ink-3);f
 <script>
 function bootApp(){
 const MKEYS=AGG.mkeys, FBKEYS=AGG.fbkeys, MLABEL=AGG.mlabel, MSHORT=AGG.mshort, IGT=AGG.igt;
+const FBU=AGG.fbuid||{};
 
 ;
 
@@ -313,8 +314,10 @@ const txt=v=>typeof v==='number'?curDict()[v]:v;
 const sub=(s,nm)=>String(s).split('\u0001').join(nm||'ลูกค้า');
 const FBPAGE='691470034208676',FBBIZ='310165158296126';
 const INBOX='https://business.facebook.com/latest/inbox/all/?business_id='+FBBIZ+'&asset_id='+FBPAGE+'&mailbox_id='+FBPAGE;
+const INBOXFB='https://business.facebook.com/latest/inbox/messenger?asset_id='+FBPAGE+'&business_id='+FBBIZ+'&mailbox_id='+FBPAGE;
 function igLink(u){var n=IGT[u];return n?INBOX+'&selected_item_id='+n+'&thread_type=IG_MESSAGE':null;}
-function inboxBtn(r){var dl=(CH==='ig')?igLink(r[0]):null;
+function fbLink(r){var u=FBU[String(r[19])];return u?INBOXFB+'&selected_item_id='+u+'&thread_type=FB_MESSAGE':null;}
+function inboxBtn(r){var dl=(CH==='ig')?igLink(r[0]):fbLink(r);
  if(dl)return '<a class="inbtn" href="'+dl+'" target="_blank" rel="noopener">เปิดแชทนี้ใน Inbox ↗</a>';
  var nm=r[0]||'';
  if(nm)return '<a class="inbtn" href="'+INBOX+'" target="_blank" rel="noopener" data-copy="'+esc(nm).replace(/"/g,'&quot;')+'">เปิด Inbox + คัดลอกชื่อ ↗</a>';
@@ -521,7 +524,7 @@ function emptyMsg(){
  }
  return '<div class="empty">'+body+(act?'<div>'+act+'</div>':'')+'</div>';
 }
-function fbNote(){return `<p class="note">แชท Facebook กรกฎาคม 2026 — <b>4,067 แชท / 51,876 ข้อความ</b> ฝังครบทุกข้อความในหน้านี้แล้ว ค้นด้วยชื่อลูกค้าได้ทันที · รายการนี้รวม<b>ทุกแชท</b> รวมกลุ่ม S0/S1 ที่ตัวเลขสรุปด้านบนไม่นับเป็นลีด · Facebook ไม่เปิดให้ลิงก์ตรงเข้าห้องแชท ปุ่ม <b>เปิด Inbox + คัดลอกชื่อ</b> ที่หัวแชทจึงคัดลอกชื่อลูกค้าให้อัตโนมัติแล้วเปิดกล่องข้อความ — วางในช่องค้นหาเพื่อเข้าห้องแชทนั้น (ฝั่ง Instagram กดเข้าห้องแชทได้ตรง ๆ) · <a href="${SHEET_FB}" target="_blank" rel="noopener">เปิดสเปรดชีตต้นทาง ↗</a></p>`;}
+function fbNote(){return `<p class="note">แชท Facebook กรกฎาคม 2026 — <b>4,067 แชท / 51,876 ข้อความ</b> ฝังครบทุกข้อความในหน้านี้แล้ว ค้นด้วยชื่อลูกค้าได้ทันที · รายการนี้รวม<b>ทุกแชท</b> รวมกลุ่ม S0/S1 ที่ตัวเลขสรุปด้านบนไม่นับเป็นลีด · ห้องที่มีป้าย <b>🔗 ลิงก์ตรง</b> กดปุ่ม <b>เปิดแชทนี้ใน Inbox</b> ที่หัวแชทแล้วเข้าห้องนั้นได้ทันที (ตอนนี้ทำไว้ ${Object.keys(FBU).length} ห้องแรกของกลุ่มปิดการขาย กำลังทยอยเพิ่ม) · ห้องที่ยังไม่มี ปุ่มจะคัดลอกชื่อลูกค้าให้แล้วเปิดกล่องข้อความ วางในช่องค้นหาเพื่อเข้าห้องนั้น · <a href="${SHEET_FB}" target="_blank" rel="noopener">เปิดสเปรดชีตต้นทาง ↗</a></p>`;}
 function igBrowserShell(){
  return `${CH==='fb'?fbNote():''}<div class="md">
  <div class="pane"><div class="ptop">
@@ -551,6 +554,7 @@ function renderList(){
   if(r[14]>=2)fl.push('<span class="badge risk">ถามซ้ำ '+r[14]+'</span>');
   if(r[17])fl.push('<span class="badge ok">ปิดการขาย</span>');
   if(CH==='fb'&&r[20])fl.push('<span class="badge">จากโฆษณา</span>');
+  if(CH==='fb'&&FBU[String(r[19])])fl.push('<span class="badge ok">🔗 ลิงก์ตรง</span>');
   fl.push('<span class="badge">'+r[1]+'</span>');
   return `<button class="prow" data-i="${gi}" aria-current="${gi===SEL}">
    <span class="nm">${CH==='fb'?'':'@'}${esc(r[0]||'(ไม่มีชื่อผู้ใช้)')}</span>
