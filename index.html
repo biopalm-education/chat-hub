@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>ห้องเครื่องแชท Biopalm · เข้าสู่ระบบ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600&display=swap">
+<style>
+:root{
+ --paper:#FAF9F6; --card:#FFFFFF; --sunk:#F2F1EC;
+ --ink:#17211C; --ink-2:#4C5A53; --ink-3:#84918A;
+ --line:#E3E1DA; --line-2:#CFCEC5;
+ --leaf:#2E6B4E; --leaf-soft:#E4EFE8;
+ --risk:#AB3524; --risk-soft:#F9E5E1;
+ --shadow:0 1px 2px rgba(23,33,28,.06),0 10px 30px rgba(23,33,28,.08);
+ color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root{
+ --paper:#111613; --card:#181F1B; --sunk:#141A17;
+ --ink:#E6EBE7; --ink-2:#A8B5AD; --ink-3:#76837B;
+ --line:#242D28; --line-2:#33403A;
+ --leaf:#7CC79C; --leaf-soft:#17291F;
+ --risk:#EE9184; --risk-soft:#2E1713;
+ --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 30px rgba(0,0,0,.35);
+ color-scheme:dark;
+}}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:var(--paper);color:var(--ink);
+ font-family:"IBM Plex Sans Thai",system-ui,-apple-system,"Segoe UI",sans-serif;
+ display:flex;align-items:center;justify-content:center;padding:24px}
+.box{width:100%;max-width:392px;background:var(--card);border:1px solid var(--line);
+ border-radius:16px;padding:32px 28px 24px;box-shadow:var(--shadow)}
+.mark{width:42px;height:42px;border-radius:11px;background:var(--leaf);color:#fff;
+ display:flex;align-items:center;justify-content:center;font-weight:600;letter-spacing:.5px;
+ font-size:15px;margin-bottom:18px}
+@media (prefers-color-scheme:dark){.mark{color:#0F1512}}
+h1{font-size:19px;line-height:1.35;margin:0 0 6px;font-weight:600;letter-spacing:-.01em}
+.s{font-size:13.5px;line-height:1.6;color:var(--ink-2);margin:0 0 22px}
+label{display:block;font-size:12.5px;font-weight:500;color:var(--ink-2);margin:0 0 6px}
+input{width:100%;font:inherit;font-size:14.5px;color:var(--ink);background:var(--sunk);
+ border:1px solid var(--line-2);border-radius:9px;padding:10px 12px;margin:0 0 14px;
+ transition:border-color .15s,box-shadow .15s}
+input:focus{outline:none;border-color:var(--leaf);box-shadow:0 0 0 3px var(--leaf-soft)}
+button{width:100%;font:inherit;font-size:14.5px;font-weight:600;cursor:pointer;
+ background:var(--leaf);color:#fff;border:0;border-radius:9px;padding:11px 14px;margin-top:4px;
+ transition:opacity .15s}
+@media (prefers-color-scheme:dark){button{color:#0F1512}}
+button:hover{opacity:.9}
+button[disabled]{opacity:.55;cursor:progress}
+.err{display:none;font-size:13px;line-height:1.5;color:var(--risk);background:var(--risk-soft);
+ border-radius:8px;padding:8px 11px;margin:0 0 12px}
+.err.on{display:block}
+.ft{font-size:11.5px;line-height:1.6;color:var(--ink-3);margin:18px 0 0;text-align:center}
+</style>
+</head>
+<body>
+<form class="box" id="f" autocomplete="off">
+ <div class="mark">BP</div>
+ <h1>ห้องเครื่องแชท Biopalm</h1>
+ <p class="s">รายงานภายในของทีม BioPalm — กรอกชื่อผู้ใช้และรหัสผ่านที่ทีมส่งให้เพื่อเปิดดู</p>
+
+ <label for="u">ชื่อผู้ใช้</label>
+ <input id="u" name="u" type="text" autocapitalize="none" autocorrect="off" spellcheck="false" required>
+
+ <label for="p">รหัสผ่าน</label>
+ <input id="p" name="p" type="password" required>
+
+ <div class="err" id="e" role="alert"></div>
+ <button id="b" type="submit">เข้าสู่ระบบ</button>
+
+ <p class="ft">หน้านี้เข้ารหัสด้วย AES-256-GCM · ข้อมูลถูกถอดรหัสในเครื่องของคุณเท่านั้น ไม่มีการส่งรหัสผ่านออกไปที่ใด</p>
+</form>
+<script>
+(function(){
+const RAW="./chatdata.json";
+const b64=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
+const $=i=>document.getElementById(i);
+const err=m=>{const e=$('e');e.textContent=m;e.classList.add('on');};
+async function load(){
+ const r=await fetch(RAW,{cache:'no-store'});
+ if(!r.ok)throw new Error('nodata');
+ return await r.json();
+}
+let P=load().catch(e=>({__err:String(e)}));
+$('f').addEventListener('submit',async ev=>{
+ ev.preventDefault();
+ $('e').classList.remove('on');
+ const btn=$('b');btn.disabled=true;btn.textContent='กำลังเปิด…';
+ try{
+  const G=await P;
+  if(!G||G.__err||!G.c)throw new Error('nodata');
+  const secret=$('u').value.trim()+':'+$('p').value;
+  const base=await crypto.subtle.importKey('raw',new TextEncoder().encode(secret),'PBKDF2',false,['deriveKey']);
+  const key=await crypto.subtle.deriveKey(
+   {name:'PBKDF2',salt:b64(G.s),iterations:G.n,hash:'SHA-256'},
+   base,{name:'AES-GCM',length:256},false,['decrypt']);
+  const packed=await crypto.subtle.decrypt({name:'AES-GCM',iv:b64(G.i)},key,b64(G.c));
+  let html;
+  if(G.z==='gzip'){
+   if(typeof DecompressionStream==='undefined')throw new Error('nogzip');
+   const st=new Blob([packed]).stream().pipeThrough(new DecompressionStream('gzip'));
+   html=await new Response(st).text();
+  }else{html=new TextDecoder().decode(packed);}
+  document.open();document.write(html);document.close();
+ }catch(x){
+  btn.disabled=false;btn.textContent='เข้าสู่ระบบ';
+  const m=x&&x.message;
+  if(m==='nodata'){P=load().catch(e=>({__err:String(e)}));err('โหลดไฟล์ข้อมูลไม่สำเร็จ — ตรวจว่าใน gist มีไฟล์ชื่อ chatdata.json แล้วลองใหม่');}
+  else if(m==='nogzip')err('เบราว์เซอร์นี้เก่าเกินไป กรุณาเปิดด้วย Chrome, Edge หรือ Safari รุ่นใหม่');
+  else err('ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง');
+  $('p').select();
+ }
+});
+$('u').focus();
+})();
+</script>
+</body>
+</html>
