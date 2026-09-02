@@ -16,7 +16,7 @@
  --line:#E3E1DA; --line-2:#CFCEC5;
  --leaf:#2E6B4E; --leaf-soft:#E4EFE8;
  --ig:#A83E7C; --ig-soft:#F7E7F1;
- --fb:#2B5CA6; --fb-soft:#E4EDF9;
+ --fb:#2B5CA6; --fb-soft:#E4EDF9; --ln:#06813B; --ln-soft:#E3F5EA;
  --warn:#A96B14; --warn-soft:#F8EEDC;
  --risk:#AB3524; --risk-soft:#F9E5E1;
  --shadow:0 1px 2px rgba(23,33,28,.06),0 6px 18px rgba(23,33,28,.05);
@@ -27,7 +27,7 @@
  --line:#242D28; --line-2:#33403A;
  --leaf:#7CC79C; --leaf-soft:#17291F;
  --ig:#E39BC6; --ig-soft:#2A1826;
- --fb:#8FB6EC; --fb-soft:#13203A;
+ --fb:#8FB6EC; --fb-soft:#13203A; --ln:#5FD99A; --ln-soft:#0E2A1B;
  --warn:#E0AC5C; --warn-soft:#2A2013;
  --risk:#EE9184; --risk-soft:#2E1713;
  --shadow:0 1px 2px rgba(0,0,0,.4),0 6px 18px rgba(0,0,0,.3);
@@ -38,7 +38,7 @@
  --line:#242D28; --line-2:#33403A;
  --leaf:#7CC79C; --leaf-soft:#17291F;
  --ig:#E39BC6; --ig-soft:#2A1826;
- --fb:#8FB6EC; --fb-soft:#13203A;
+ --fb:#8FB6EC; --fb-soft:#13203A; --ln:#5FD99A; --ln-soft:#0E2A1B;
  --warn:#E0AC5C; --warn-soft:#2A2013;
  --risk:#EE9184; --risk-soft:#2E1713;
  --shadow:0 1px 2px rgba(0,0,0,.4),0 6px 18px rgba(0,0,0,.3);
@@ -75,7 +75,13 @@ h1,h2,h3{font-family:"Noto Serif Thai","IBM Plex Sans Thai",serif;font-weight:70
 .seg button[data-ch="ig"][aria-pressed="true"]{color:var(--ig)}
 .seg button[data-ch="fb"][aria-pressed="true"]{color:var(--fb)}
 .dot{width:8px;height:8px;border-radius:50%;display:inline-block}
-.dot.ig{background:var(--ig)} .dot.fb{background:var(--fb)}
+.dot.ig{background:var(--ig)} .dot.fb{background:var(--fb)} .dot.line{background:var(--ln)}
+.fill.line{background:var(--ln-soft);border-right:2px solid var(--ln)}
+.lnwrap{display:grid;gap:10px}
+.lnbar{display:grid;grid-template-columns:110px 1fr auto;gap:10px;align-items:center;font-size:13px}
+.lnbar .t{height:9px;border-radius:5px;background:var(--ln);min-width:3px}
+.lnbar .track{background:var(--sunk);border-radius:5px;overflow:hidden}
+.lnnote{border-left:3px solid var(--ln);background:var(--ln-soft)}
 select{font:inherit;font-size:13.5px;padding:6px 10px;border:1px solid var(--line-2);border-radius:8px;
  background:var(--card);color:var(--ink);cursor:pointer}
 .now{margin-left:auto;font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--ink-2);
@@ -242,9 +248,9 @@ footer{border-top:1px solid var(--line);padding:20px 0 42px;color:var(--ink-3);f
 <div id="app" hidden>
 
 <div class="wrap mast">
- <div class="src"><span>ข้อมูลจริงจาก API</span><span>Instagram @biopalmmm</span><span>Facebook · BioPalm</span><span>ดึงเมื่อ 31 ส.ค. 2026</span></div>
+ <div class="src"><span>ข้อมูลจริงจาก API</span><span>Instagram @biopalmmm</span><span>Facebook · BioPalm</span><span>LINE OA · @biopalm</span><span>ดึงเมื่อ 31 ส.ค. 2026</span></div>
  <h1>Chat History</h1>
- <p>แชททุกข้อความจากสองช่องทาง แยกคนที่สนใจคอร์สออกจากคนที่มารับของแถม วัดว่าแอดมินตอบเร็วแค่ไหน และดูว่าดีลหลุดตรงไหน — เลือกช่องทางและเดือนได้จากแถบด้านล่าง</p>
+ <p>แชททุกข้อความจากสามช่องทาง แยกคนที่สนใจคอร์สออกจากคนที่มารับของแถม วัดว่าแอดมินตอบเร็วแค่ไหน และดูว่าดีลหลุดตรงไหน — เลือกช่องทางและเดือนได้จากแถบด้านล่าง</p>
 </div>
 <div class="rail"><div class="wrap railin">
  <div class="ctl"><span class="lab">ช่องทาง</span>
@@ -252,6 +258,7 @@ footer{border-top:1px solid var(--line);padding:20px 0 42px;color:var(--ink-3);f
    <button data-ch="all" aria-pressed="true">ทั้งสองช่องทาง</button>
    <button data-ch="ig" aria-pressed="false"><i class="dot ig"></i>Instagram</button>
    <button data-ch="fb" aria-pressed="false"><i class="dot fb"></i>Facebook</button>
+   <button data-ch="line" aria-pressed="false"><i class="dot line"></i>LINE OA</button>
   </div></div>
  <div class="ctl"><span class="lab">เดือน</span><select id="msel" aria-label="เลือกเดือน"></select></div>
  <div class="ctl"><span class="lab">หน้า</span>
@@ -270,6 +277,9 @@ footer{border-top:1px solid var(--line);padding:20px 0 42px;color:var(--ink-3);f
   <p class="note">ทุกคนที่สนใจคอร์สเริ่มที่ S2 แล้วไหลลงตามลำดับ ตัวเลขที่หายไประหว่างขั้นคือจุดที่ดีลหลุด</p><div class="fun" id="fun"></div></section>
  <section id="s-why"><div class="shead"><h2>ดีลหลุดเพราะอะไร</h2><span class="lab">เฉพาะที่ยังไม่ปิด</span></div><div class="tw"><table id="why"></table></div></section>
  <section id="s-day"><div class="shead"><h2>รายวันและรายชั่วโมง</h2><span class="lab">เวลาไทย</span></div><div class="tw"><table id="hrs"></table></div></section>
+ <section id="s-lnwork"><div class="shead"><h2>ภาระงานรายแอดมิน</h2><span class="lab">LINE OA</span></div><div id="lnwork"></div></section>
+ <section id="s-lnhour"><div class="shead"><h2>ช่วงเวลาที่ลูกค้าทักเข้ามา</h2><span class="lab">เวลาไทย</span></div><div id="lnhour"></div></section>
+ <section id="s-lntag"><div class="shead"><h2>แท็กที่ทีมติดไว้</h2><span class="lab">LINE OA</span></div><div id="lntag"></div></section>
  <section id="s-raw"><div class="shead"><h2>ข้อมูลดิบ</h2><span class="lab" id="rawscope"></span></div><div id="raw"></div></section>
 </div>
 <footer><div class="wrap">
@@ -284,7 +294,11 @@ const FBU=AGG.fbuid||{};
 
 ;
 
-const CHN={all:'ทั้งสองช่องทาง',ig:'Instagram',fb:'Facebook'};
+const CHN={all:'ทั้งสองช่องทาง',ig:'Instagram',fb:'Facebook',line:'LINE OA'};
+const LINEKEYS=AGG.linekeys||[]; const LINEFULL={};
+const SHEET_LINE='https://docs.google.com/spreadsheets/d/1TPJVVmIcfRxjXvQNHU2IlvMDDL6Oc8TsXn1tQMIbaOY/edit';
+const LINEBOT='U38b62d24ef14a84a048cd6633fc15d21';
+const lineA=()=>(LINEKEYS.includes(M)?[AGG.line[M]]:LINEKEYS.map(k=>AGG.line[k])).filter(Boolean);
 const RZ={R01:['ติดเรื่องราคา','ราคา'],R02:['ตารางไม่ตรง','สินค้า'],R04:['ต้องปรึกษาผู้ปกครอง','ลูกค้า'],
  R05:['แอดมินปล่อยค้าง ไม่ตอบต่อ','แอดมิน'],R06:['ไม่เคยได้คุยกับ Admin เลย','แอดมิน'],
  R08:['ลูกค้าเงียบเอง','ลูกค้า'],R99:['อื่น ๆ','—']};
@@ -346,13 +360,17 @@ function single(){const p=pool();return p.length===1?p[0]:null;}
 
 /* ---------- controls ---------- */
 function buildMonths(){
- const keys=(CH==='fb')?FBKEYS:MKEYS;
+ const keys=(CH==='fb')?FBKEYS:(CH==='line'?LINEKEYS:MKEYS);
+ if(CH==='line'){M=LINEKEYS.includes(M)?M:LINEKEYS[LINEKEYS.length-1];
+  $('#msel').innerHTML=LINEKEYS.map(k=>`<option value="${k}"${k===M?' selected':''}>${MLABEL[k]}</option>`).join('');return;}
  if(!keys.includes(M)&&M!=='all')M=keys[keys.length-1];
  if(CH==='fb'&&M==='all')M='2026-07';
  const opts=(CH==='fb'?[]:[['all','ทุกเดือนรวมกัน']]).concat(keys.map(k=>[k,MLABEL[k]]));
  $('#msel').innerHTML=opts.map(([v,l])=>`<option value="${v}"${v===M?' selected':''}>${l}</option>`).join('');
 }
 function scopeText(){
+ if(CH==='line'){const a=lineA(),t=sumA(a,'threads'),m=sumA(a,'msgs');
+  return `กำลังดู <b>LINE OA</b> · <b>${MLABEL[M]||''}</b><br>${nf(t)} แชท · ${nf(m)} ข้อความ · ดึงจาก LINE Official Account Manager`;}
  const p=pool(), th=sumA(p,'threads'), ms=sumA(p,'msgs');
  const mo=M==='all'?'ม.ค.–ก.ค. 2026':MLABEL[M];
  let extra='';
@@ -362,7 +380,7 @@ function scopeText(){
 }
 function setNow(){$('#now').innerHTML=scopeText();
  $('#keyscope').textContent=CHN[CH]+' · '+(M==='all'?'ทุกเดือน':MLABEL[M]);
- $('#rawscope').textContent=CH==='fb'?'Facebook':(CH==='ig'?'Instagram':'เลือกช่องทางเพื่อดูแชท');}
+ $('#rawscope').textContent=CH==='fb'?'Facebook':(CH==='ig'?'Instagram':(CH==='line'?'LINE OA':'เลือกช่องทางเพื่อดูแชท'));}
 
 /* ---------- key findings ---------- */
 function keyCards(){
@@ -647,17 +665,147 @@ function renderRaw(){
  </div>`;
 }
 
+
+/* ---------- LINE OA ---------- */
+const LN_FNAME={all:'ทั้งหมด',nohuman:'ไม่เคยได้คุยกับ Admin',risk:'ทักมาแล้วหาย',won:'สมัครแล้ว',open:'ยังไม่สมัคร',notag:'ไม่ติดแท็ก'};
+const LN_FORDER=['all','won','open','risk','nohuman','notag'];
+const LN_FDESC={
+ all:'ทุกห้องแชทที่มีความเคลื่อนไหวในเดือนที่เลือก',
+ nohuman:'ห้องที่<b>ไม่มีแอดมินตัวจริงพิมพ์ตอบเลยสักข้อความ</b> — ทั้งห้องมีแต่บอทตอบอัตโนมัติ',
+ risk:'ห้องที่<b>ข้อความสุดท้ายเป็นของลูกค้า</b> แล้วไม่มีแอดมินตอบต่อ — ลูกค้าถามค้างไว้แล้วเงียบไป',
+ won:'ห้องที่ทีมติดแท็ก <b>Q-สมัครแล้ว</b> ใน LINE OA · <b>ระวัง</b> แท็กนี้ติดที่ตัวห้อง ไม่ได้ผูกกับเดือน หลายห้องเป็นนักเรียนเก่าที่สมัครไปก่อนหน้านี้ จึงเทียบกับ “ปิดการขาย” ของ Facebook ตรง ๆ ไม่ได้',
+ open:'ห้องที่ทีมติดแท็ก <b>Q-ยังไม่สมัคร</b> — คือกลุ่มที่ยังตามต่อได้',
+ notag:'ห้องที่<b>ยังไม่ได้ติดแท็กสถานะใด ๆ</b> — ตกสำรวจจากระบบแท็กของทีม'};
+let LN_F='all', LN_TERM='', LN_PAGE=0, LN_SEL=0, LN_DEEP=false; const LN_PER=25;
+const lnRooms=()=>((LINEFULL[M]||{}).rooms)||[];
+const lnDict=()=>((LINEFULL[M]||{}).dict)||[];
+const lnTxt=v=>typeof v==='number'?(lnDict()[v]||''):v;
+const lnLink=id=>'https://chat.line.biz/'+((LINEFULL[M]||{}).bot||LINEBOT)+'/chat/'+id;
+function lnHit(o,t){if(!t)return true;
+ if((o.n||'').toLowerCase().includes(t))return true;
+ if((o.ad||[]).join(' ').toLowerCase().includes(t))return true;
+ if(LN_DEEP)return o.tr.some(m=>String(lnTxt(m[2])).toLowerCase().includes(t));
+ return false;}
+function lnFiltered(){const t=LN_TERM.trim().toLowerCase();
+ return lnRooms().filter(o=>{
+  if(LN_F==='nohuman'&&!o.nh)return false;
+  if(LN_F==='risk'&&!o.hg)return false;
+  if(LN_F==='won'&&o.st!=='สมัครแล้ว')return false;
+  if(LN_F==='open'&&o.st!=='ยังไม่สมัคร')return false;
+  if(LN_F==='notag'&&o.st!=='ไม่ติดแท็ก')return false;
+  return lnHit(o,t);});}
+function lnCount(f){const t=LN_TERM.trim().toLowerCase();
+ return lnRooms().filter(o=>{
+  if(f==='nohuman')return o.nh&&lnHit(o,t);
+  if(f==='risk')return o.hg&&lnHit(o,t);
+  if(f==='won')return o.st==='สมัครแล้ว'&&lnHit(o,t);
+  if(f==='open')return o.st==='ยังไม่สมัคร'&&lnHit(o,t);
+  if(f==='notag')return o.st==='ไม่ติดแท็ก'&&lnHit(o,t);
+  return lnHit(o,t);}).length;}
+function lnShell(){
+ return `<p class="note lnnote">แชท LINE OA <b>${MLABEL[M]||''}</b> — ${nf(lnRooms().length)} ห้อง พร้อมบทสนทนาเต็มทุกข้อความ · <b>เขียว</b> = แอดมินตัวจริง (มีชื่อกำกับ) · <b>เทา</b> = บอทตอบอัตโนมัติ · เวลาตอบนับเฉพาะแอดมินตัวจริง · ทุกห้องกดปุ่ม <b>เปิดห้องแชทนี้</b> เข้าห้องจริงใน LINE OA Manager ได้ทันที (ต้องล็อกอิน LINE Business ID อยู่) · <a href="${SHEET_LINE}" target="_blank" rel="noopener">เปิดสเปรดชีตต้นทาง ↗</a></p>
+ <div class="md"><div class="pane"><div class="ptop">
+  <input id="lnq" type="search" placeholder="ค้นหาชื่อลูกค้า หรือชื่อแอดมิน…" aria-label="ค้นหา" value="${esc(LN_TERM)}">
+  <div class="chips" id="lnchips">${LN_FORDER.map(k=>`<button class="chip" data-f="${k}" aria-pressed="${LN_F===k}">${LN_FNAME[k]} (${nf(lnCount(k))})</button>`).join('')}</div>
+  <p class="fdesc"><b>${LN_FNAME[LN_F]}</b> — ${LN_FDESC[LN_F]}</p>
+  <details class="fhelp"><summary>คำอธิบายทุกแท็บ</summary><dl>${LN_FORDER.map(k=>'<dt>'+LN_FNAME[k]+'</dt><dd>'+LN_FDESC[k]+'</dd>').join('')}</dl></details>
+  <label class="deeprow"><input type="checkbox" id="lndeep"${LN_DEEP?' checked':''}> ค้นในเนื้อข้อความด้วย</label>
+ </div><div class="plist" id="lnlist"></div>
+ <div class="pfoot"><span id="lncount"></span><span id="lnpager"></span></div></div>
+ <div class="pane"><div class="chead" id="lnhead"></div><div class="thread" id="lnthread"></div></div></div>`;}
+function lnRenderList(){
+ const rows=lnFiltered(), pages=Math.max(1,Math.ceil(rows.length/LN_PER));
+ if(LN_PAGE>=pages)LN_PAGE=pages-1; if(LN_SEL>=rows.length)LN_SEL=0;
+ const slice=rows.slice(LN_PAGE*LN_PER,LN_PAGE*LN_PER+LN_PER);
+ $('#lnlist').innerHTML=slice.length?slice.map((o,i)=>{
+  const gi=LN_PAGE*LN_PER+i,fl=[];
+  if(o.nh)fl.push('<span class="badge risk">ไม่เคยได้คุยกับ Admin</span>');
+  if(o.hg)fl.push('<span class="badge risk">ทักมาแล้วหาย</span>');
+  if(o.st==='สมัครแล้ว')fl.push('<span class="badge ok">สมัครแล้ว</span>');
+  else if(o.st!=='ไม่ติดแท็ก')fl.push('<span class="badge">'+esc(o.st)+'</span>');
+  fl.push('<span class="badge">ตอบครั้งแรก '+dur(o.r1)+'</span>');
+  (o.ad||[]).slice(0,3).forEach(a=>fl.push('<span class="badge">👤 '+esc(a)+'</span>'));
+  return `<button class="prow" data-i="${gi}" aria-current="${gi===LN_SEL}">
+   <span class="nm">${esc(o.n||'(ไม่มีชื่อ)')}</span>
+   <span class="meta">${esc(o.f)} → ${esc(o.t)} · ลูกค้า ${o.c} · แอดมิน ${o.h} · บอท ${o.b}</span>
+   <span class="fl">${fl.join('')}</span></button>`;}).join('')
+  :'<div class="empty">ไม่พบห้องแชทที่ตรงเงื่อนไข</div>';
+ $('#lncount').textContent=nf(rows.length)+' ห้อง';
+ let pg='';for(let p=0;p<pages;p++){if(pages>9&&Math.abs(p-LN_PAGE)>2&&p>0&&p<pages-1){if(Math.abs(p-LN_PAGE)===3)pg+='<span class="lab"> … </span>';continue;}
+  pg+=`<button class="pg" data-p="${p}" aria-current="${p===LN_PAGE}">${p+1}</button>`;}
+ $('#lnpager').innerHTML=pages>1?pg:'';
+ $('#lnlist').querySelectorAll('.prow').forEach(b=>b.addEventListener('click',()=>{LN_SEL=+b.dataset.i;lnRenderList();lnRenderChat();}));
+ $('#lnpager').querySelectorAll('.pg').forEach(b=>b.addEventListener('click',()=>{LN_PAGE=+b.dataset.p;lnRenderList();}));}
+function lnRenderChat(){
+ const rows=lnFiltered(), o=rows[LN_SEL];
+ if(!o){$('#lnhead').innerHTML='';$('#lnthread').innerHTML='<div class="empty">เลือกห้องแชททางซ้ายเพื่ออ่านบทสนทนา</div>';return;}
+ $('#lnhead').innerHTML=`<h3>${esc(o.n||'(ไม่มีชื่อ)')}<a class="inbtn" href="${lnLink(o.id)}" target="_blank" rel="noopener">เปิดห้องแชทนี้ ↗</a></h3>
+  <p class="lab">${esc(o.f)} → ${esc(o.t)} · ${o.tr.length} ข้อความ · ตอบครั้งแรก ${dur(o.r1)} · ตอบกลาง ${dur(o.rm)} · นานสุด ${dur(o.rw)}</p>
+  <p class="lab">ดูแลโดย ${esc(o.ow||'-')}${(o.ad||[]).length?' · ตอบจริง '+o.ad.map(esc).join(', '):''}${(o.tg||[]).length?'<br>แท็ก: '+o.tg.map(esc).join(' · '):''}</p>`;
+ let html='',lastDay='';
+ for(const e of o.tr){
+  const day=e[0].slice(0,5), time=e[0].slice(6), who=e[1];
+  if(day!==lastDay){html+=`<div class="daysep">— ${day} —</div>`;lastDay=day;}
+  const cls=who==='C'?'r0':(who==='B'?'r2':'r1');
+  const tag=who==='C'?'':(who==='B'?'บอท':esc(who));
+  html+=`<div class="msg ${cls}"><div class="bub">${tag?'<b class="tplmark">'+tag+'</b>':''}${esc(lnTxt(e[2]))}</div><span class="ts">${time}</span></div>`;}
+ $('#lnthread').innerHTML=html;$('#lnthread').scrollTop=0;}
+function lnRenderRaw(){
+ const el=$('#raw');
+ if(!LINEFULL[M]){const mo=M;
+  el.innerHTML='<div class="empty">กำลังโหลดข้อมูลแชท… <span class="lab">LINE OA</span></div>';
+  getFile('line-'+mo).then(function(d){LINEFULL[mo]=d;if(CH==='line'&&M===mo)lnRenderRaw();})
+   .catch(function(e){el.innerHTML='<div class="empty">โหลดข้อมูลแชทไม่สำเร็จ — '+esc(String((e&&e.message)||e))+
+    '<div><button class="fixbtn" onclick="location.reload()">ลองใหม่</button></div></div>';});
+  return;}
+ el.innerHTML=lnShell();
+ $('#lnq').addEventListener('input',e=>{LN_TERM=e.target.value;LN_PAGE=0;LN_SEL=0;lnRenderList();lnRenderChat();});
+ $('#lndeep').addEventListener('change',e=>{LN_DEEP=e.target.checked;LN_PAGE=0;LN_SEL=0;lnRenderList();lnRenderChat();});
+ el.querySelectorAll('#lnchips .chip').forEach(c=>c.addEventListener('click',()=>{LN_F=c.dataset.f;LN_PAGE=0;LN_SEL=0;lnRenderRaw();}));
+ lnRenderList();lnRenderChat();}
+function lnOverview(){
+ const a=AGG.line[M]||{}, tot=a.threads||0;
+ const bar=(lab,v,max,extra)=>`<div class="lnbar"><span>${esc(lab)}</span><span class="track"><span class="t" style="width:${max?Math.max(2,Math.round(v*100/max)):0}%"></span></span><span>${nf(v)}${extra||''}</span></div>`;
+ const amax=(a.admins||[]).reduce((m,x)=>Math.max(m,x[1]),0);
+ const hmax=(a.hours||[]).reduce((m,x)=>Math.max(m,x[1]),0);
+ $('#key').innerHTML=`<div class="cards">
+  <div class="card ok"><h3>แอดมิน LINE ตอบเร็วกว่า Facebook ราว 10 เท่า</h3>
+   <p>ตอบครั้งแรกกลาง ๆ <b>${dur(a.first_med)}</b> ขณะที่ Facebook เดือนเดียวกันอยู่ที่ <b>7.8 นาที</b> · ช้าสุด 10% ของห้องยังอยู่ที่ <b>${dur(a.first_p90)}</b> เท่านั้น</p></div>
+  <div class="card ok"><h3>แทบไม่มีใครหลุดมือ</h3>
+   <p>มีเพียง <b>${nf(a.notyped)} ห้องจาก ${nf(tot)}</b> (${pc(a.notyped,tot)}) ที่ไม่เคยได้คุยกับแอดมินตัวจริงเลย</p></div>
+  <div class="card risk"><h3>ยังมี ${nf(a.unans)} ห้องที่ลูกค้าถามค้างไว้แล้วเงียบ</h3>
+   <p>${pc(a.unans,tot)} ของห้องทั้งหมด — ข้อความสุดท้ายเป็นของลูกค้าและไม่มีแอดมินตอบต่อ กดแท็บ <b>ทักมาแล้วหาย</b> ในหน้าข้อมูลดิบเพื่อไล่เก็บ</p></div>
+  <div class="card warn"><h3>ห้ามเอาตัวเลข “สมัครแล้ว” ไปเทียบกับ Facebook ตรง ๆ</h3>
+   <p>${nf(a.won)} ห้องติดแท็ก <b>Q-สมัครแล้ว</b> แต่แท็กนี้ติดที่ตัวห้อง <b>ไม่ผูกกับเดือน</b> — หลายห้องเป็นนักเรียนเก่าที่สมัครไปตั้งแต่เดือนก่อน แล้วเดือนนี้มาคุยเรื่องอื่น ต่างจากฝั่ง Facebook ที่นับเฉพาะดีลที่ปิดได้ภายในเดือนนั้น</p></div></div>`;
+ $('#kpi').innerHTML=`
+  ${K('','ห้องแชททั้งหมด',nf(tot),'ห้อง','มีความเคลื่อนไหวอย่างน้อย 1 ข้อความในเดือนนี้')}
+  ${K('','ข้อความทั้งหมด',nf(a.msgs),'ข้อความ','ลูกค้า '+nf(a.cust)+' · แอดมิน '+nf(a.adm)+' · บอท '+nf(a.bot))}
+  ${K('ok','ตอบครั้งแรก (กลาง)',dur(a.first_med),'','นับเฉพาะแอดมินตัวจริง ไม่นับบอท')}
+  ${K('ok','ติดแท็กสมัครแล้ว',nf(a.won),'ห้อง','อ่านคำเตือนด้านบนก่อนนำไปเทียบช่องทางอื่น')}
+  ${K('warn','ยังไม่สมัคร',nf(a.open),'ห้อง','กลุ่มที่ยังตามต่อได้')}
+  ${K('risk','ทักมาแล้วหาย',nf(a.unans),'ห้อง',pc(a.unans,tot)+' ของห้องทั้งหมด')}
+  ${K('risk','ไม่เคยได้คุยกับ Admin',nf(a.notyped),'ห้อง','ทั้งห้องมีแต่บอท')}
+  ${K('warn','ยังไม่ติดแท็กสถานะ',nf(a.notag),'ห้อง','ตกสำรวจจากระบบแท็กของทีม')}`;
+ $('#lnwork').innerHTML=`<p class="note">จำนวนห้องที่แอดมินแต่ละคนเข้าไปตอบในเดือนนี้ (ห้องหนึ่งมีได้หลายคน) — ตัวเลขท้ายแถวคือจำนวนข้อความที่พิมพ์เอง</p>
+  <div class="lnwrap">${(a.admins||[]).map(x=>bar(x[0],x[1],amax,' ห้อง · '+nf(x[2])+' ข้อความ')).join('')}</div>`;
+ $('#lnhour').innerHTML=`<p class="note">ช่วงเวลาที่ลูกค้าพิมพ์เข้ามา (เวลาไทย) — ใช้จัดกะแอดมินได้</p>
+  <div class="lnwrap">${(a.hours||[]).filter(x=>x[1]>0).map(x=>bar(String(x[0]).padStart(2,'0')+':00',x[1],hmax,' ข้อความ')).join('')}</div>`;
+ $('#lntag').innerHTML=`<p class="note">แท็กที่ทีมติดไว้เองใน LINE OA — ใช้เป็นตัวชี้ความสนใจคอร์สได้เลย ไม่ต้องเดาจากข้อความ</p>
+  <div class="lnwrap">${(a.tags||[]).map(x=>bar(x[0],x[1],(a.tags[0]||[0,1])[1],' ห้อง')).join('')}</div>`;}
+
 /* ---------- orchestration ---------- */
-function renderOverview(){renderKey();renderKPI();renderCmp();renderFunnel();renderWhy();renderHours();}
+function renderOverview(){if(CH==='line'){lnOverview();return;}renderKey();renderKPI();renderCmp();renderFunnel();renderWhy();renderHours();}
 function applyView(){
- const ov=VIEW==='ov';
- ['s-key','s-kpi','s-cmp','s-fun','s-why','s-day'].forEach(id=>{const e=document.getElementById(id);if(e)e.hidden=!ov;});
+ const ov=VIEW==='ov', ln=CH==='line';
+ ['s-key','s-kpi'].forEach(id=>{const e=document.getElementById(id);if(e)e.hidden=!ov;});
+ ['s-cmp','s-fun','s-why','s-day'].forEach(id=>{const e=document.getElementById(id);if(e)e.hidden=!ov||ln;});
+ ['s-lnwork','s-lnhour','s-lntag'].forEach(id=>{const e=document.getElementById(id);if(e)e.hidden=!ov||!ln;});
  $('#s-raw').hidden=ov;
- if(ov){renderOverview();}else{renderRaw();}
+ if(ov){renderOverview();}else{if(CH==='line'){lnRenderRaw();}else{renderRaw();}}
 }
 function refresh(){buildMonths();setNow();applyView();}
 $('#chseg').querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{
- CH=b.dataset.ch;PAGE=0;SEL=0;TERM='';FILTER='all';
+ CH=b.dataset.ch;PAGE=0;SEL=0;TERM='';FILTER='all';LN_PAGE=0;LN_SEL=0;LN_TERM='';LN_F='all';
  $('#chseg').querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.ch===CH)));
  PAGE=0;SEL=0;refresh();}));
 $('#vseg').querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{

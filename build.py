@@ -41,6 +41,8 @@ emit('agg', 'src/agg.json')
 emit('ig-all', 'src/ig_all.json')
 for p in sorted(glob.glob('src/fb_*.json')):
     emit('fb-' + re.search(r'fb_(.+)\.json$', p).group(1), p)
+for p in sorted(glob.glob('src/line_*.json')):
+    emit('line-' + re.search(r'line_(.+)\.json$', p).group(1), p)
 
 check, _ = seal({'ok': 1}, compress=False)
 manifest = {'v': 1, 'kdf': {'s': base64.b64encode(salt).decode(), 'n': ITER},
