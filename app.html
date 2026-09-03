@@ -79,8 +79,8 @@ h1,h2,h3{font-family:"Noto Serif Thai","IBM Plex Sans Thai",serif;font-weight:70
 .fill.line{background:var(--ln-soft);border-right:2px solid var(--ln)}
 .lnwrap{display:grid;gap:10px}
 .lnbar{display:grid;grid-template-columns:110px 1fr auto;gap:10px;align-items:center;font-size:13px}
-.lnbar .t{height:9px;border-radius:5px;background:var(--ln);min-width:3px}
-.lnbar .track{background:var(--sunk);border-radius:5px;overflow:hidden}
+.lnbar .t{display:block;height:9px;border-radius:5px;background:var(--ln);min-width:3px}
+.lnbar .track{display:block;height:9px;background:var(--sunk);border-radius:5px;overflow:hidden}
 .lnnote{border-left:3px solid var(--ln);background:var(--ln-soft)}
 select{font:inherit;font-size:13.5px;padding:6px 10px;border:1px solid var(--line-2);border-radius:8px;
  background:var(--card);color:var(--ink);cursor:pointer}
@@ -123,7 +123,7 @@ th{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.07em;tex
 tbody tr:last-child td{border-bottom:0}
 td.n{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums;text-align:right}
 td.w{white-space:normal;color:var(--ink-3);font-size:13px;min-width:200px}
-.chIG{color:var(--ig);font-weight:600} .chFB{color:var(--fb);font-weight:600}
+.chIG{color:var(--ig);font-weight:600} .chFB{color:var(--fb);font-weight:600} .chLN{color:var(--ln);font-weight:600}
 
 /* funnel */
 .fun{display:flex;flex-direction:column;gap:7px}
@@ -255,7 +255,7 @@ footer{border-top:1px solid var(--line);padding:20px 0 42px;color:var(--ink-3);f
 <div class="rail"><div class="wrap railin">
  <div class="ctl"><span class="lab">ช่องทาง</span>
   <div class="seg" id="chseg" role="group" aria-label="เลือกช่องทาง">
-   <button data-ch="all" aria-pressed="true">ทั้งสองช่องทาง</button>
+   <button data-ch="all" aria-pressed="true">ทุกช่องทาง</button>
    <button data-ch="ig" aria-pressed="false"><i class="dot ig"></i>Instagram</button>
    <button data-ch="fb" aria-pressed="false"><i class="dot fb"></i>Facebook</button>
    <button data-ch="line" aria-pressed="false"><i class="dot line"></i>LINE OA</button>
@@ -270,21 +270,22 @@ footer{border-top:1px solid var(--line);padding:20px 0 42px;color:var(--ink-3);f
 </div></div>
 <div class="wrap">
  <section id="s-key"><div class="shead"><h2>สรุปสำคัญ</h2><span class="lab" id="keyscope"></span></div><div id="key"></div></section>
- <section id="s-kpi"><div class="shead"><h2>ตัวเลขสำคัญ</h2><span class="lab">เฉพาะแชทที่สนใจคอร์ส</span></div><div class="kpis" id="kpi"></div></section>
- <section id="s-cmp"><div class="shead"><h2>เทียบ Instagram กับ Facebook</h2><span class="lab">กรกฎาคม 2026</span></div>
-  <p class="note">เดือนกรกฎาคมเป็นเดือนเดียวที่มีข้อมูลครบทั้งสองช่องทาง จึงเป็นเดือนเดียวที่เทียบกันได้ตรง ๆ</p><div id="cmp"></div></section>
- <section id="s-fun"><div class="shead"><h2>กรวยการขาย</h2><span class="lab">S2 → S5</span></div>
+ <section id="s-kpi"><div class="shead"><h2>ตัวเลขสำคัญ</h2><span class="lab" id="kpiscope">เฉพาะแชทที่สนใจคอร์ส</span></div><div class="kpis" id="kpi"></div></section>
+ <section id="s-cmp"><div class="shead"><h2>เทียบช่องทาง</h2><span class="lab" id="cmpscope"></span></div>
+  <p class="note" id="cmpnote"></p><div id="cmp"></div></section>
+ <section id="s-fun"><div class="shead"><h2>กรวยการขาย</h2><span class="lab" id="funscope">S2 → S5</span></div>
   <p class="note">ทุกคนที่สนใจคอร์สเริ่มที่ S2 แล้วไหลลงตามลำดับ ตัวเลขที่หายไประหว่างขั้นคือจุดที่ดีลหลุด</p><div class="fun" id="fun"></div></section>
- <section id="s-why"><div class="shead"><h2>ดีลหลุดเพราะอะไร</h2><span class="lab">เฉพาะที่ยังไม่ปิด</span></div><div class="tw"><table id="why"></table></div></section>
- <section id="s-day"><div class="shead"><h2>รายวันและรายชั่วโมง</h2><span class="lab">เวลาไทย</span></div><div class="tw"><table id="hrs"></table></div></section>
- <section id="s-lnwork"><div class="shead"><h2>ภาระงานรายแอดมิน</h2><span class="lab">LINE OA</span></div><div id="lnwork"></div></section>
- <section id="s-lnhour"><div class="shead"><h2>ช่วงเวลาที่ลูกค้าทักเข้ามา</h2><span class="lab">เวลาไทย</span></div><div id="lnhour"></div></section>
- <section id="s-lntag"><div class="shead"><h2>แท็กที่ทีมติดไว้</h2><span class="lab">LINE OA</span></div><div id="lntag"></div></section>
+ <section id="s-why"><div class="shead"><h2>ดีลหลุดเพราะอะไร</h2><span class="lab" id="whyscope">เฉพาะที่ยังไม่ปิด</span></div><div class="tw"><table id="why"></table></div></section>
+ <section id="s-day"><div class="shead"><h2>รายวันและรายชั่วโมง</h2><span class="lab" id="dayscope">เวลาไทย</span></div><div class="tw"><table id="hrs"></table></div></section>
+ <section id="s-lnwork"><div class="shead"><h2>ภาระงานรายแอดมิน · LINE OA</h2><span class="lab" id="lnscope">LINE OA</span></div><div id="lnwork"></div></section>
+ <section id="s-lnhour"><div class="shead"><h2>ช่วงเวลาที่ลูกค้าทักเข้ามา · LINE OA</h2><span class="lab">เวลาไทย</span></div><div id="lnhour"></div></section>
+ <section id="s-lntag"><div class="shead"><h2>แท็กที่ทีมติดไว้ · LINE OA</h2><span class="lab">LINE OA</span></div><div id="lntag"></div></section>
  <section id="s-raw"><div class="shead"><h2>ข้อมูลดิบ</h2><span class="lab" id="rawscope"></span></div><div id="raw"></div></section>
 </div>
 <footer><div class="wrap">
- <p>วิเคราะห์จากแชท Instagram @biopalmmm (1 ม.ค. – 31 ก.ค. 2026 · 571 แชท · 4,962 ข้อความ) และแชท Facebook เพจ BioPalm (1–31 ก.ค. 2026 · 4,067 แชท · 51,136 ข้อความ) · ดึงข้อมูลเมื่อ 31 สิงหาคม 2026</p>
- <p>“ปิดการขาย” ฝั่ง Facebook อ้างอิงป้ายสถานะที่ทีมกดเองในกล่องข้อความ Meta หรือข้อความยืนยันการสมัคร · ฝั่ง Instagram อ้างอิงข้อความยืนยันเข้ากลุ่มเรียน · Facebook ให้ชื่อจริงไม่ใช่ @username จึงเชื่อมตัวตนข้ามช่องทางไม่ได้ คนเดียวกันที่ทักทั้งสองทางถูกนับเป็น 2 ลีด</p>
+ <p id="ftscope">วิเคราะห์จากแชท Instagram @biopalmmm · Facebook เพจ BioPalm · LINE OA ของ BioPalm</p>
+ <p>“ปิดการขาย” ฝั่ง Facebook อ้างอิงป้ายสถานะที่ทีมกดเองในกล่องข้อความ Meta หรือข้อความยืนยันการสมัคร · ฝั่ง Instagram อ้างอิงข้อความยืนยันเข้ากลุ่มเรียน · ฝั่ง LINE ใช้แท็ก <b>Q-สมัครแล้ว</b> ที่ทีมติดไว้เอง ซึ่งติดที่ตัวห้องไม่ผูกกับเดือน จึงเทียบกับ “ปิดการขาย” ของอีกสองช่องทางตรง ๆ ไม่ได้</p>
+ <p>แต่ละช่องทางให้ชื่อลูกค้าคนละแบบ (Facebook ให้ชื่อจริง · Instagram ให้ @username · LINE ให้ชื่อบัญชี LINE) จึงเชื่อมตัวตนข้ามช่องทางไม่ได้ คนเดียวกันที่ทักหลายทางถูกนับแยกกันทุกช่องทาง · ในโหมด “ทุกเดือนรวมกัน” ของ LINE ห้องเดียวกันที่มีความเคลื่อนไหวหลายเดือนจะถูกนับซ้ำในทุกเดือนที่คุย</p>
 </div></footer>
 </div>
 <script>
@@ -294,11 +295,13 @@ const FBU=AGG.fbuid||{};
 
 ;
 
-const CHN={all:'ทั้งสองช่องทาง',ig:'Instagram',fb:'Facebook',line:'LINE OA'};
+const CHN={all:'ทุกช่องทาง',ig:'Instagram',fb:'Facebook',line:'LINE OA'};
 const LINEKEYS=AGG.linekeys||[]; const LINEFULL={};
+const ALLKEYS=Array.from(new Set([].concat(MKEYS||[],FBKEYS||[],LINEKEYS))).sort();
 const SHEET_LINE='https://docs.google.com/spreadsheets/d/1TPJVVmIcfRxjXvQNHU2IlvMDDL6Oc8TsXn1tQMIbaOY/edit';
 const LINEBOT='U38b62d24ef14a84a048cd6633fc15d21';
-const lineA=()=>(LINEKEYS.includes(M)?[AGG.line[M]]:LINEKEYS.map(k=>AGG.line[k])).filter(Boolean);
+const lineMonths=()=>M==='all'?LINEKEYS.slice():(LINEKEYS.includes(M)?[M]:[]);
+const lineA=()=>lineMonths().map(k=>(AGG.line||{})[k]).filter(Boolean);
 const RZ={R01:['ติดเรื่องราคา','ราคา'],R02:['ตารางไม่ตรง','สินค้า'],R04:['ต้องปรึกษาผู้ปกครอง','ลูกค้า'],
  R05:['แอดมินปล่อยค้าง ไม่ตอบต่อ','แอดมิน'],R06:['ไม่เคยได้คุยกับ Admin เลย','แอดมิน'],
  R08:['ลูกค้าเงียบเอง','ลูกค้า'],R99:['อื่น ๆ','—']};
@@ -350,9 +353,9 @@ function toast(m){let t=document.getElementById('bp-toast');
 let CH='all', M='all', VIEW='ov';
 let FILTER='all', TERM='', PAGE=0, SEL=0, DEEP=false; const PER=25;
 
-const rangeLabel=ks=>{if(!ks.length)return '';if(ks.length===1)return MLABEL[ks[0]];
- const a=ks[0],b=ks[ks.length-1],ya=a.slice(0,4),yb=b.slice(0,4);
- return (MSHORT[a]||'')+(ya!==yb?' '+ya:'')+'–'+(MSHORT[b]||'')+' '+yb;};
+const rangeLabel=ks=>{if(!ks.length)return '';if(ks.length===1)return MLABEL[ks[0]]||ks[0];
+ const a=ks[0],b=ks[ks.length-1];
+ return (MSHORT[a]||a)+' – '+(MSHORT[b]||b);};
 const igMonths=()=>M==='all'?MKEYS.slice():(MKEYS.includes(M)?[M]:[]);
 const fbMonths=()=>M==='all'?FBKEYS.slice():(FBKEYS.includes(M)?[M]:[]);
 function sumA(list,f){let t=0;for(const a of list)t+=(a[f]||0);return t;}
@@ -360,53 +363,124 @@ function igA(){return igMonths().map(k=>AGG.ig[k]).filter(Boolean);}
 function fbA(){return fbMonths().map(k=>AGG.fb[k]).filter(Boolean);}
 function pool(){const o=[];if(CH!=='fb')o.push(...igA());if(CH!=='ig')o.push(...fbA());return o;}
 function single(){const p=pool();return p.length===1?p[0]:null;}
+const rng=(a,f)=>{const v=a.map(x=>x[f]).filter(z=>z!=null);return v.length?[Math.min.apply(null,v),Math.max.apply(null,v)]:null;};
+const durR=(v,r)=>v!=null?dur(v):(r?(r[0]===r[1]?dur(r[0]):dur(r[0])+' – '+dur(r[1])):'—');
+function lnMerge(){
+ const a=lineA(); if(!a.length)return null;
+ const o={n:a.length};
+ ['threads','msgs','cust','adm','bot','won','open','sysonly','notag','notyped','unans'].forEach(f=>o[f]=sumA(a,f));
+ o.rngFt=rng(a,'first_med'); o.rngP90=rng(a,'first_p90'); o.rngMed=rng(a,'med_med');
+ if(a.length===1){o.first_med=a[0].first_med;o.first_p90=a[0].first_p90;o.med_med=a[0].med_med;
+  o.admins=(a[0].admins||[]).slice();o.tags=(a[0].tags||[]).slice();o.hours=(a[0].hours||[]).slice();return o;}
+ o.first_med=null;o.first_p90=null;o.med_med=null;
+ const am={};for(const x of a)for(const r of (x.admins||[])){const k=r[0];if(!am[k])am[k]=[k,0,0];am[k][1]+=r[1]||0;am[k][2]+=r[2]||0;}
+ o.admins=Object.keys(am).map(k=>am[k]).sort((p,q)=>q[1]-p[1]);
+ const tg={};for(const x of a)for(const r of (x.tags||[]))tg[r[0]]=(tg[r[0]]||0)+r[1];
+ o.tags=Object.keys(tg).map(k=>[k,tg[k]]).sort((p,q)=>q[1]-p[1]);
+ const hr=[];for(let h=0;h<24;h++)hr.push([h,0]);
+ for(const x of a)for(const r of (x.hours||[]))if(hr[r[0]])hr[r[0]][1]+=(r[1]||0);
+ o.hours=hr;
+ return o;}
+function chSum(w){
+ if(w==='line'){const o=lnMerge();if(!o)return null;
+  o.mc=o.threads?Math.round(o.cust*10/o.threads)/10:null;
+  o.mh=o.threads?Math.round(o.adm*10/o.threads)/10:null;
+  o.ma=o.threads?Math.round(o.bot*10/o.threads)/10:null;
+  return o;}
+ const a=w==='ig'?igA():fbA(); if(!a.length)return null;
+ const o={n:a.length};
+ ['threads','msgs','leads','closed','notyped','unans','ask2','price','gw','qual','adLeads','adClosed','noAdLeads','noAdClosed'].forEach(f=>o[f]=sumA(a,f));
+ o.rngFt=rng(a,'ftMed'); o.rngP90=rng(a,'ftP90');
+ if(a.length===1){o.ftMed=a[0].ftMed;o.ftP75=a[0].ftP75;o.ftP90=a[0].ftP90;o.turnsMed=a[0].turnsMed;o.turnsMean=a[0].turnsMean;}
+ else {o.ftMed=null;o.ftP75=null;o.ftP90=null;}
+ const wt=f=>{let sm=0,t=0;for(const x of a){if(x[f]!=null){sm+=x[f]*(x.threads||0);t+=(x.threads||0);}}return t?Math.round(sm*10/t)/10:null;};
+ o.mc=wt('mc');o.mh=wt('mh');o.ma=wt('ma');
+ return o;}
 
 /* ---------- controls ---------- */
+function chKeys(){return (CH==='fb')?FBKEYS:(CH==='ig'?MKEYS:(CH==='line'?LINEKEYS:ALLKEYS));}
 function buildMonths(){
- const keys=(CH==='fb')?FBKEYS:(CH==='line'?LINEKEYS:MKEYS);
- if(CH==='line'){M=LINEKEYS.includes(M)?M:LINEKEYS[LINEKEYS.length-1];
-  $('#msel').innerHTML=LINEKEYS.map(k=>`<option value="${k}"${k===M?' selected':''}>${MLABEL[k]}</option>`).join('');return;}
- if(!keys.includes(M)&&M!=='all')M=keys[keys.length-1];
- const opts=[['all','ทุกเดือนรวมกัน']].concat(keys.map(k=>[k,MLABEL[k]]));
+ const keys=chKeys();
+ if(!keys.includes(M)&&M!=='all')M=keys.length?keys[keys.length-1]:'all';
+ const opts=[['all','ทุกเดือนรวมกัน']].concat(keys.map(k=>[k,MLABEL[k]||k]));
  $('#msel').innerHTML=opts.map(([v,l])=>`<option value="${v}"${v===M?' selected':''}>${l}</option>`).join('');
 }
+function scopeKeys(){const o=[];
+ if(CH==='all')o.push(...igMonths(),...fbMonths(),...lineMonths());
+ else if(CH==='ig')o.push(...igMonths());
+ else if(CH==='fb')o.push(...fbMonths());
+ else o.push(...lineMonths());
+ return Array.from(new Set(o)).sort();}
+function moLabel(){return M==='all'?(rangeLabel(scopeKeys())||'ทุกเดือน'):(MLABEL[M]||M);}
+function lnDupNote(){return (M==='all'&&lineMonths().length>1)?' · <b>โหมดทุกเดือนรวมกัน</b> นับห้องแยกตามเดือน ห้องเดียวกันที่คุยหลายเดือนจึงถูกนับซ้ำ':'';}
 function scopeText(){
  if(CH==='line'){const a=lineA(),t=sumA(a,'threads'),m=sumA(a,'msgs');
-  return `กำลังดู <b>LINE OA</b> · <b>${MLABEL[M]||''}</b><br>${nf(t)} แชท · ${nf(m)} ข้อความ · ดึงจาก LINE Official Account Manager`;}
- const p=pool(), th=sumA(p,'threads'), ms=sumA(p,'msgs');
- const uk=Array.from(new Set([].concat(CH!=='fb'?igMonths():[],CH!=='ig'?fbMonths():[]))).sort();
- const mo=M==='all'?rangeLabel(uk):MLABEL[M];
- return `กำลังดู <b>${CHN[CH]}</b> · <b>${mo}</b><br>${nf(th)} แชท · ${nf(ms)} ข้อความ`;
+  return `กำลังดู <b>LINE OA</b> · <b>${moLabel()}</b><br>${nf(t)} ห้องแชท · ${nf(m)} ข้อความ · ดึงจาก LINE Official Account Manager`;}
+ const p=pool(), la=(CH==='all')?lineA():[];
+ const th=sumA(p,'threads')+sumA(la,'threads'), ms=sumA(p,'msgs')+sumA(la,'msgs');
+ const parts=[];
+ if(CH!=='fb'){const v=sumA(igA(),'threads');if(v)parts.push('IG '+nf(v));}
+ if(CH!=='ig'){const v=sumA(fbA(),'threads');if(v)parts.push('FB '+nf(v));}
+ if(CH==='all'){const v=sumA(la,'threads');if(v)parts.push('LINE '+nf(v));}
+ return `กำลังดู <b>${CHN[CH]}</b> · <b>${moLabel()}</b><br>${nf(th)} แชท · ${nf(ms)} ข้อความ${parts.length>1?' <span class="lab">('+parts.join(' · ')+')</span>':''}`;
 }
 function setNow(){$('#now').innerHTML=scopeText();
- $('#keyscope').textContent=CHN[CH]+' · '+(M==='all'?'ทุกเดือน':MLABEL[M]);
- $('#rawscope').textContent=CH==='fb'?'Facebook':(CH==='ig'?'Instagram':(CH==='line'?'LINE OA':'เลือกช่องทางเพื่อดูแชท'));}
+ $('#keyscope').textContent=CHN[CH]+' · '+(M==='all'?'ทุกเดือน':(MLABEL[M]||M));
+ const ks=$('#kpiscope');if(ks)ks.textContent=CH==='line'?'ทุกห้องแชทที่มีความเคลื่อนไหว':(CH==='all'?'ยอดแชทรวมทุกช่องทาง · ตัวเลขลีดเฉพาะ IG + Facebook':'เฉพาะแชทที่สนใจคอร์ส');
+ ['funscope','whyscope','dayscope'].forEach(function(id){const e=document.getElementById(id);
+  if(e)e.textContent=(CH==='all'?'IG + Facebook · ':'')+(id==='funscope'?'S2 → S5':(id==='whyscope'?'เฉพาะที่ยังไม่ปิด':'เวลาไทย'));});
+ const ls=$('#lnscope');if(ls)ls.textContent='LINE OA · '+moLabel();
+ const ft=$('#ftscope');if(ft)ft.innerHTML='ข้อมูลในหน้านี้: Instagram @biopalmmm '+(MKEYS.length?rangeLabel(MKEYS):'—')+
+  ' · Facebook เพจ BioPalm '+(FBKEYS.length?rangeLabel(FBKEYS):'—')+
+  ' · LINE OA '+(LINEKEYS.length?rangeLabel(LINEKEYS):'—')+' · แต่ละช่องทางมีเดือนไม่เท่ากัน เดือนที่ช่องทางไหนยังไม่มีข้อมูลจะขึ้นเป็น “—”';
+ $('#rawscope').textContent=CH==='fb'?'Facebook':(CH==='ig'?'Instagram':(CH==='line'?'LINE OA · '+moLabel():'เลือกช่องทางเพื่อดูแชท'));}
 
 /* ---------- key findings ---------- */
 function keyCards(){
  const c=[];
- if(CH!=='ig'&&fbMonths().length){
-  const f=AGG.fb['2026-07'];
-  c.push(['risk','Facebook คือช่องทางขายจริง ไม่ใช่ Instagram',
-   `เดือนกรกฎาคมเดือนเดียว Facebook มี <b>${nf(f.threads)} แชท</b> และปิดการขายได้ <b>${f.closed} ราย</b> ขณะที่ Instagram ทั้งเดือนมี 389 แชท ปิดได้ <b>1 ราย</b> — ข้อสรุปทุกข้อที่เคยสร้างจาก Instagram ล้วน ๆ กำลังมองช่องทางที่เล็กที่สุด`]);
-  c.push(['warn','โฆษณาพาคนมาเยอะ แต่ปิดได้ยากกว่าคนที่มาเอง',
-   `ลีดที่มาจากโฆษณา ${nf(f.adLeads)} คน ปิดได้ ${f.adClosed} ราย (<b>${pc(f.adClosed,f.adLeads)}</b>) · ลีดที่ไม่ได้มาจากโฆษณา ${nf(f.noAdLeads)} คน ปิดได้ ${f.noAdClosed} ราย (<b>${pc(f.noAdClosed,f.noAdLeads)}</b>) — คนที่มาเองปิดง่ายกว่าเกือบสองเท่า`]);
-  c.push(['warn','ระบบยิงข้อความสำเร็จรูปมากกว่าคนพิมพ์เอง 3 เท่า',
-   `ต่อหนึ่งแชท: ลูกค้าพิมพ์ ${f.mc} · แอดมินพิมพ์เอง <b>${f.mh}</b> · ข้อความสำเร็จรูป <b>${f.ma}</b> · และมี <b>${nf(f.ask2)} แชท (${pc(f.ask2,f.leads)})</b> ที่ถูกถามระดับชั้นซ้ำตั้งแต่ 2 ครั้งขึ้นไป`]);
-  c.push(['info','ทีมติดป้ายสถานะลูกค้าในระบบ Meta อยู่แล้ว — ใช้เป็นตัววัดได้เลย',
-   `กรกฎาคมมีการติดป้าย “มีคุณสมบัติ” <b>${nf(f.qual)} แชท</b> และ “สร้างคอนเวอร์ชั่นแล้ว” <b>${f.closed} แชท</b> · นี่คือข้อมูลที่ทีมกดเอง ไม่ใช่การเดาจากข้อความ ถ้าทีมกดครบทุกครั้ง จะกลายเป็นตัวชี้วัดยอดขายที่เชื่อถือได้ทันที`]);
+ const ig=(CH==='all'||CH==='ig')?chSum('ig'):null;
+ const fb=(CH==='all'||CH==='fb')?chSum('fb'):null;
+ const ln=(CH==='all')?chSum('line'):null;
+ const mo=moLabel();
+ if(CH==='all'&&(fb||ig||ln)){
+  const bits=[];
+  if(fb)bits.push(`Facebook <b>${nf(fb.threads)} แชท → ปิดได้ ${nf(fb.closed)} ราย</b>`);
+  if(ig)bits.push(`Instagram <b>${nf(ig.threads)} แชท → ปิดได้ ${nf(ig.closed)} ราย</b>`);
+  if(ln)bits.push(`LINE OA <b>${nf(ln.threads)} ห้อง</b> (ติดแท็กสมัครแล้ว ${nf(ln.won)} — คนละนิยามกับปิดการขาย)`);
+  c.push(['risk','ยอดขายกระจุกอยู่ช่องทางเดียว',
+   `${mo}: ${bits.join(' · ')}`]);
  }
- if(CH==='ig'){
-  c.push(['risk','Instagram: คนทักเยอะขึ้น 14 เท่า แต่ปิดการขายได้น้อยลง',
-   'ม.ค. 7 · ก.พ. 4 · มี.ค. 27 · เม.ย. 25 · พ.ค. 61 · มิ.ย. 58 · <b>ก.ค. 389</b> แชท · แต่อัตราปิดต่อลีดตกจากช่วง 4–11% เหลือ <b>0.7%</b> ในเดือนที่คนทักเยอะที่สุด']);
-  c.push(['risk','76 คนใน 281 (27%) ไม่เคยได้คุยกับ Admin เลย',
-   'ทักมา → ระบบตอบอัตโนมัติ → ถามระดับชั้น → ลูกค้าตอบ → <b>เงียบ</b> · สัดส่วนนี้โตต่อเนื่องตั้งแต่เมษายน: 11% → 18% → 23% → 34%']);
-  c.push(['warn','กิจกรรม Giveaway เดือน ก.ค. ดึงคนมา 204 คน แต่แทบไม่กลายเป็นลีด',
-   'สัดส่วนคนที่สนใจคอร์สจริงเคยอยู่ที่ 66–81% ทุกเดือนตั้งแต่ มี.ค. แล้วตกเหลือ <b>39%</b> ในเดือน ก.ค.']);
+ if(fb){
+  c.push(['risk','Facebook คือช่องทางที่ปิดการขายได้จริง',
+   `${mo}: Facebook มี <b>${nf(fb.threads)} แชท</b> ปิดการขายได้ <b>${nf(fb.closed)} ราย</b> — อัตราปิดต่อลีด <b>${pc(fb.closed,fb.leads)}</b>` +
+   (ig?` · Instagram มี <b>${nf(ig.threads)} แชท</b> ปิดได้ <b>${nf(ig.closed)} ราย</b> อัตราปิดต่อลีด <b>${pc(ig.closed,ig.leads)}</b>`:'')]);
+  if(fb.adLeads||fb.noAdLeads)
+   c.push(['warn','โฆษณาพาคนมาเยอะ แต่ปิดได้ยากกว่าคนที่มาเอง',
+    `ลีดที่มาจากโฆษณา ${nf(fb.adLeads)} คน ปิดได้ ${nf(fb.adClosed)} ราย (<b>${pc(fb.adClosed,fb.adLeads)}</b>) · ลีดที่ไม่ได้มาจากโฆษณา ${nf(fb.noAdLeads)} คน ปิดได้ ${nf(fb.noAdClosed)} ราย (<b>${pc(fb.noAdClosed,fb.noAdLeads)}</b>)`]);
+  if(fb.ma!=null&&fb.mh!=null)
+   c.push(['warn','ระบบยิงข้อความสำเร็จรูปมากกว่าที่แอดมินพิมพ์เอง',
+    `ต่อหนึ่งแชท: ลูกค้าพิมพ์ ${fb.mc} · แอดมินพิมพ์เอง <b>${fb.mh}</b> · ข้อความสำเร็จรูป <b>${fb.ma}</b>${fb.mh?` (มากกว่าที่คนพิมพ์เอง ${Math.round(fb.ma*10/fb.mh)/10} เท่า)`:''} · และมี <b>${nf(fb.ask2)} แชท (${pc(fb.ask2,fb.leads)})</b> ที่ถูกถามระดับชั้นซ้ำตั้งแต่ 2 ครั้งขึ้นไป`]);
+  if(fb.qual!=null)
+   c.push(['info','ทีมติดป้ายสถานะลูกค้าในระบบ Meta อยู่แล้ว — ใช้เป็นตัววัดได้เลย',
+    `${mo} มีการติดป้าย “มีคุณสมบัติ” <b>${nf(fb.qual)} แชท</b> และ “สร้างคอนเวอร์ชั่นแล้ว” <b>${nf(fb.closed)} แชท</b> · นี่คือข้อมูลที่ทีมกดเอง ไม่ใช่การเดาจากข้อความ ถ้าทีมกดครบทุกครั้ง จะกลายเป็นตัวชี้วัดยอดขายที่เชื่อถือได้ทันที`]);
  }
- if(CH==='all'){
-  c.unshift(['risk','งบโฆษณาและคนของคุณอยู่คนละที่กับยอดขาย',
-   'กรกฎาคม 2026: Facebook <b>4,067 แชท → ปิดได้ 104 ราย</b> · Instagram <b>389 แชท → ปิดได้ 1 ราย</b> · Facebook ทำยอดได้มากกว่า 104 เท่า จากปริมาณแชทที่มากกว่า 10 เท่า']);
+ if(ln){
+  c.push(['ok','LINE OA ตอบเร็วที่สุดในสามช่องทาง',
+   `ตอบครั้งแรกค่ากลาง <b>${durR(ln.first_med,ln.rngFt)}</b>${fb?` เทียบกับ Facebook <b>${durR(fb.ftMed,fb.rngFt)}</b>`:''} · มีเพียง <b>${nf(ln.notyped)} ห้องจาก ${nf(ln.threads)}</b> (${pc(ln.notyped,ln.threads)}) ที่ไม่เคยได้คุยกับแอดมินตัวจริง แต่ยังมี <b>${nf(ln.unans)} ห้อง</b> ที่ลูกค้าถามค้างไว้แล้วเงียบ`]);
+  c.push(['warn','ห้ามเอาแท็ก “สมัครแล้ว” ของ LINE ไปเทียบยอดปิดของ Facebook',
+   `${nf(ln.won)} ห้องติดแท็ก <b>Q-สมัครแล้ว</b> แต่แท็กนี้ติดที่ตัวห้อง <b>ไม่ผูกกับเดือน</b> — หลายห้องเป็นนักเรียนเก่าที่สมัครไปก่อนหน้านี้ ต่างจาก Facebook ที่นับเฉพาะดีลที่ปิดได้ภายในเดือนนั้น · อีก <b>${nf(ln.notag)} ห้อง</b> ยังไม่ติดแท็กเลย ทำให้ตัวเลขสถานะทุกตัวเพี้ยน`]);
+ }
+ if(CH==='ig'&&ig){
+  if(M==='all'&&MKEYS.length>1){
+   const sm=k=>String(MSHORT[k]||k).split(' ')[0];
+   const peak=MKEYS.slice().sort((a,b)=>((AGG.ig[b]||{}).threads||0)-((AGG.ig[a]||{}).threads||0))[0];
+   c.push(['risk','Instagram: คนทักเยอะขึ้นมาก แต่ปิดการขายได้น้อยลง',
+    `จำนวนแชทรายเดือน ${MKEYS.map(k=>sm(k)+' '+nf((AGG.ig[k]||{}).threads||0)).join(' · ')} · อัตราปิดต่อลีดรายเดือน ${MKEYS.map(k=>{const x=AGG.ig[k]||{};return sm(k)+' '+pc(x.closed,x.leads);}).join(' · ')} — เดือนที่คนทักเยอะที่สุดคือ <b>${MLABEL[peak]||peak}</b> แต่กลับเป็นเดือนที่ปิดได้แย่ที่สุด`]);
+   c.push(['warn','เดือนที่ยอดทักพุ่ง คือเดือนที่คุณภาพลีดตกที่สุด',
+    `สัดส่วนคนที่สนใจคอร์สจริงต่อแชททั้งหมด รายเดือน: ${MKEYS.map(k=>{const x=AGG.ig[k]||{};return sm(k)+' '+pc(x.leads,x.threads);}).join(' · ')} — ช่วงที่ตกหนักตรงกับกิจกรรม Giveaway ที่ดึงคนมาเยอะแต่ไม่ได้สนใจคอร์ส`]);
+  }
+  c.push([ig.notyped?'risk':'','Instagram: '+nf(ig.notyped)+' ลีดไม่เคยได้คุยกับ Admin เลย',
+   `${mo}: ${nf(ig.notyped)} จาก ${nf(ig.leads)} ลีด (<b>${pc(ig.notyped,ig.leads)}</b>) ทักมาแล้วคุยอยู่กับระบบตั้งแต่ต้นจนจบ · อีก <b>${nf(ig.unans)} ลีด</b> ถูกปล่อยค้างไม่มีใครตอบต่อ`]);
  }
  return c;
 }
@@ -416,27 +490,47 @@ function renderKey(){
 }
 
 /* ---------- KPI ---------- */
-function K(cls,lab,v,unit,sub){return `<div class="k ${cls}"><span class="lab">${lab}</span>
- <div class="v">${v}${unit?'<small>'+unit+'</small>':''}</div><div class="s">${sub||''}</div></div>`;}
+function K(cls,lab,v,unit,sub){const long=String(v).replace(/<[^>]*>/g,'').length>9;
+ return `<div class="k ${cls}"><span class="lab">${lab}</span>
+ <div class="v"${long?' style="font-size:19px"':''}>${v}${unit?'<small>'+unit+'</small>':''}</div><div class="s">${sub||''}</div></div>`;}
 function renderKPI(){
- const p=pool(); if(!p.length){$('#kpi').innerHTML='';return;}
- const th=sumA(p,'threads'),ld=sumA(p,'leads'),cl=sumA(p,'closed'),nt=sumA(p,'notyped'),
+ const p=pool();
+ const ig=(CH!=='fb')?chSum('ig'):null, fb=(CH!=='ig')?chSum('fb'):null, ln=(CH==='all')?chSum('line'):null;
+ if(!p.length&&!ln){$('#kpi').innerHTML='<div class="empty">ไม่มีข้อมูลในช่วงที่เลือก — ลองเปลี่ยนเดือนหรือช่องทาง</div>';return;}
+ const pth=sumA(p,'threads'),pms=sumA(p,'msgs');
+ const ld=sumA(p,'leads'),cl=sumA(p,'closed'),nt=sumA(p,'notyped'),
        un=sumA(p,'unans'),a2=sumA(p,'ask2'),pr=sumA(p,'price'),gw=sumA(p,'gw');
+ const th=pth+(ln?ln.threads:0), ms=pms+(ln?ln.msgs:0);
  const one=single();
+ const only=ln?' (IG + Facebook)':'';
  let h='';
- h+=K('','แชททั้งหมด',nf(th),'',nf(sumA(p,'msgs'))+' ข้อความ');
- h+=K('','สนใจคอร์สจริง',nf(ld),'',pc(ld,th)+' ของแชททั้งหมด');
- h+=K(cl?'ok':'risk','ปิดการขายได้',nf(cl),'',pc(cl,ld)+' ของลีด');
- h+=K(nt?'risk':'','ไม่เคยได้คุยกับ Admin',nf(nt),'',pc(nt,ld)+' ของลีด');
- h+=K(un?'risk':'','ทักมาแล้วหาย (ไม่มีใครตอบต่อ)',nf(un),'',pc(un,ld)+' ของลีด');
- h+=K(a2?'warn':'','ถูกถามระดับชั้นซ้ำ ≥2 ครั้ง',nf(a2),'',pc(a2,ld)+' ของลีด');
- h+=K('','ได้รับใบเสนอราคาแล้ว',nf(pr),'',pc(pr,ld)+' ของลีด');
- if(one){
-  h+=K('','แอดมินพิมพ์ตอบครั้งแรก',(one.ftMed/60).toFixed(1),'นาที','p75 '+dur(one.ftP75)+' · p90 '+dur(one.ftP90));
-  h+=K('','สลับถาม-ตอบ',one.turnsMed,'ครั้ง','เฉลี่ย '+one.turnsMean+' ครั้ง');
-  h+=K('','ข้อความต่อแชท',one.mc+' / '+one.mh+' / '+one.ma,'','ลูกค้า / แอดมินพิมพ์เอง / สำเร็จรูป');
+ if(ln){
+  const parts=[];
+  if(ig)parts.push('IG '+nf(ig.threads));
+  if(fb)parts.push('FB '+nf(fb.threads));
+  parts.push('LINE '+nf(ln.threads));
+  h+=K('','แชททั้งหมด (ทุกช่องทาง)',nf(th),'',parts.join(' · ')+' · รวม '+nf(ms)+' ข้อความ');
  }else{
-  h+=K('','แอดมินพิมพ์ตอบครั้งแรก','—','','ค่ากลางรวมกันไม่ได้ — เลือกช่องทางหรือเดือนเดียว');
+  h+=K('','แชททั้งหมด',nf(th),'',nf(ms)+' ข้อความ');
+ }
+ h+=K('','สนใจคอร์สจริง',nf(ld),'',pc(ld,pth)+' ของแชท'+only+(ln?' · LINE ไม่มีการแยกลีด':''));
+ h+=K(cl?'ok':'risk','ปิดการขายได้',nf(cl),'',pc(cl,ld)+' ของลีด'+only);
+ if(ln)h+=K('warn','LINE · ติดแท็กสมัครแล้ว',nf(ln.won),'ห้อง','แท็กติดที่ตัวห้อง ไม่ผูกกับเดือน — เทียบกับ “ปิดการขาย” ตรง ๆ ไม่ได้');
+ const ntAll=nt+(ln?ln.notyped:0), unAll=un+(ln?ln.unans:0);
+ h+=K(ntAll?'risk':'','ไม่เคยได้คุยกับ Admin',nf(ntAll),'',
+   ln?('IG+FB '+nf(nt)+' ('+pc(nt,ld)+' ของลีด) · LINE '+nf(ln.notyped)+' ('+pc(ln.notyped,ln.threads)+' ของห้อง)'):(pc(nt,ld)+' ของลีด'));
+ h+=K(unAll?'risk':'','ทักมาแล้วหาย (ไม่มีใครตอบต่อ)',nf(unAll),'',
+   ln?('IG+FB '+nf(un)+' ('+pc(un,ld)+' ของลีด) · LINE '+nf(ln.unans)+' ('+pc(ln.unans,ln.threads)+' ของห้อง)'):(pc(un,ld)+' ของลีด'));
+ h+=K(a2?'warn':'','ถูกถามระดับชั้นซ้ำ ≥2 ครั้ง',nf(a2),'',pc(a2,ld)+' ของลีด'+only);
+ h+=K('','ได้รับใบเสนอราคาแล้ว',nf(pr),'',pc(pr,ld)+' ของลีด'+only);
+ if(ln)h+=K('ok','LINE · แอดมินพิมพ์ตอบครั้งแรก',durR(ln.first_med,ln.rngFt),'',
+   ln.n>1?('ค่ากลางของแต่ละเดือน '+ln.n+' เดือน — บวกกันไม่ได้ จึงแสดงเป็นช่วง'):'นับเฉพาะแอดมินตัวจริง ไม่นับบอท');
+ if(one){
+  h+=K('',(ln?'IG+FB · ':'')+'แอดมินพิมพ์ตอบครั้งแรก',(one.ftMed/60).toFixed(1),'นาที','p75 '+dur(one.ftP75)+' · p90 '+dur(one.ftP90));
+  h+=K('',(ln?'IG+FB · ':'')+'สลับถาม-ตอบ',one.turnsMed,'ครั้ง','เฉลี่ย '+one.turnsMean+' ครั้ง');
+  h+=K('',(ln?'IG+FB · ':'')+'ข้อความต่อแชท',one.mc+' / '+one.mh+' / '+one.ma,'','ลูกค้า / แอดมินพิมพ์เอง / สำเร็จรูป');
+ }else if(p.length){
+  h+=K('',(ln?'IG+FB · ':'')+'แอดมินพิมพ์ตอบครั้งแรก','—','','ค่ากลางรวมกันไม่ได้ — เลือกช่องทางหรือเดือนเดียว');
  }
  if(gw)h+=K('warn','มาเพราะของแถม',nf(gw),'','ไม่ได้ถามเรื่องคอร์ส');
  $('#kpi').innerHTML=h;
@@ -445,24 +539,37 @@ function renderKPI(){
 /* ---------- IG vs FB comparison ---------- */
 function renderCmp(){
  const sec=$('#s-cmp');
- const ig=AGG.ig['2026-07'], fb=AGG.fb['2026-07'];
- if(CH!=='all'){sec.hidden=true;return;} sec.hidden=false;
- const R=(lab,a,b,note)=>`<tr><td>${lab}</td><td class="n chIG">${a}</td><td class="n chFB">${b}</td><td class="w">${note||''}</td></tr>`;
+ if(CH!=='all'){sec.hidden=true;return;}
+ const ig=chSum('ig'), fb=chSum('fb'), ln=chSum('line');
+ if([ig,fb,ln].filter(Boolean).length<2){sec.hidden=true;return;}
+ sec.hidden=false;
+ const cs=$('#cmpscope'); if(cs)cs.textContent=moLabel();
+ const miss=[]; if(!ig)miss.push('Instagram'); if(!fb)miss.push('Facebook'); if(!ln)miss.push('LINE OA');
+ const cn=$('#cmpnote');
+ if(cn)cn.innerHTML='เทียบตาม<b>เดือนที่เลือกด้านบน</b> — ตอนนี้คือ <b>'+moLabel()+'</b>'+
+  (miss.length?' · ช่วงนี้ยังไม่มีข้อมูล'+miss.join(' และ ')+' จึงขึ้นเป็น “—”':'')+
+  (M==='all'?' · โหมดทุกเดือนรวมกันบวกยอดทุกเดือนของแต่ละช่องทาง <b>ซึ่งช่วงเดือนของแต่ละช่องทางไม่เท่ากัน</b> และค่ากลาง (median) บวกกันไม่ได้ จึงแสดงเป็นช่วงต่ำสุด–สูงสุดของรายเดือนแทน':'')+
+  ' · ฝั่ง LINE ตัวเลขนับเป็น<b>ห้องแชท</b> และ “ปิดการขาย” คือแท็ก Q-สมัครแล้ว ที่ติดกับตัวห้องไม่ผูกกับเดือน';
+ const V=(x,f)=>x&&x[f]!=null?nf(x[f]):'—';
+ const PCT=(x,f,d)=>x&&x[d]?pc(x[f],x[d]):'—';
+ const R=(lab,a,b,c,note)=>`<tr><td>${lab}</td><td class="n chIG">${a}</td><td class="n chFB">${b}</td><td class="n chLN">${c}</td><td class="w">${note||''}</td></tr>`;
+ const times=(x,y)=>(x&&y&&y>0)?Math.round(x*10/y)/10+' เท่า':'';
  sec.querySelector('#cmp').innerHTML=`<div class="tw"><table>
-  <thead><tr><th>ตัวชี้วัด · กรกฎาคม 2026</th><th class="n">Instagram</th><th class="n">Facebook</th><th>อ่านว่าอย่างไร</th></tr></thead><tbody>
-  ${R('แชททั้งหมด',nf(ig.threads),nf(fb.threads),'Facebook มากกว่า 10 เท่า')}
-  ${R('ข้อความทั้งหมด',nf(ig.msgs),nf(fb.msgs),'Facebook มากกว่า 18 เท่า')}
-  ${R('สนใจคอร์สจริง',nf(ig.leads),nf(fb.leads),'')}
-  ${R('— คิดเป็นสัดส่วนของแชท',pc(ig.leads,ig.threads),pc(fb.leads,fb.threads),'IG ถูก Giveaway เจือจางจนคุณภาพลีดตก')}
-  ${R('ปิดการขายได้',nf(ig.closed),nf(fb.closed),'ยอดขายเกือบทั้งหมดอยู่ที่ Facebook')}
-  ${R('— อัตราปิดต่อลีด',pc(ig.closed,ig.leads),pc(fb.closed,fb.leads),'Facebook ดีกว่า 4 เท่า')}
-  ${R('ไม่เคยได้คุยกับ Admin',pc(ig.notyped,ig.leads),pc(fb.notyped,fb.leads),'ฝั่ง IG ถูกทิ้งมากกว่าเกือบ 3 เท่า')}
-  ${R('ทักมาแล้วหาย (ไม่มีใครตอบต่อ)',pc(ig.unans,ig.leads),pc(fb.unans,fb.leads),'IG แทบไม่มีใครดูแลต่อ')}
-  ${R('ถูกถามระดับชั้นซ้ำ ≥2 ครั้ง',pc(ig.ask2,ig.leads),pc(fb.ask2,fb.leads),'เป็นปัญหาหนักทั้งสองช่องทาง หนักกว่าที่ Facebook')}
-  ${R('แอดมินพิมพ์ตอบครั้งแรก (ค่ากลาง)',dur(ig.ftMed),dur(fb.ftMed),'ใกล้เคียงกัน')}
-  ${R('— p90 (หางยาว)',dur(ig.ftP90),dur(fb.ftP90),'ทั้งคู่มีลีดที่รอเป็นวัน')}
-  ${R('แอดมินพิมพ์เอง เฉลี่ยต่อแชท',ig.mh,fb.mh,'')}
-  ${R('ข้อความสำเร็จรูป เฉลี่ยต่อแชท',ig.ma,fb.ma,'Facebook พึ่งข้อความอัตโนมัติหนักกว่ามาก')}
+  <thead><tr><th>ตัวชี้วัด · ${esc(moLabel())}</th><th class="n">Instagram</th><th class="n">Facebook</th><th class="n">LINE OA</th><th>อ่านว่าอย่างไร</th></tr></thead><tbody>
+  ${R('แชท / ห้องแชททั้งหมด',V(ig,'threads'),V(fb,'threads'),V(ln,'threads'),(ig&&fb)?('Facebook มากกว่า Instagram '+times(fb.threads,ig.threads)):'')}
+  ${R('ข้อความทั้งหมด',V(ig,'msgs'),V(fb,'msgs'),V(ln,'msgs'),(ig&&fb)?('Facebook มากกว่า Instagram '+times(fb.msgs,ig.msgs)):'')}
+  ${R('สนใจคอร์สจริง (ลีด)',V(ig,'leads'),V(fb,'leads'),'—','LINE ไม่ได้แยกลีดออกจากห้องทั่วไป')}
+  ${R('— คิดเป็นสัดส่วนของแชท',PCT(ig,'leads','threads'),PCT(fb,'leads','threads'),'—','')}
+  ${R('ปิดการขายได้',V(ig,'closed'),V(fb,'closed'),ln?nf(ln.won)+' *':'—','* LINE = แท็ก Q-สมัครแล้ว ไม่ใช่ยอดปิดของเดือนนั้น')}
+  ${R('— อัตราปิดต่อลีด',PCT(ig,'closed','leads'),PCT(fb,'closed','leads'),'—','')}
+  ${R('ไม่เคยได้คุยกับ Admin',PCT(ig,'notyped','leads'),PCT(fb,'notyped','leads'),PCT(ln,'notyped','threads'),'IG/FB คิดจากลีด · LINE คิดจากห้องทั้งหมด')}
+  ${R('ทักมาแล้วหาย (ไม่มีใครตอบต่อ)',PCT(ig,'unans','leads'),PCT(fb,'unans','leads'),PCT(ln,'unans','threads'),'IG/FB คิดจากลีด · LINE คิดจากห้องทั้งหมด')}
+  ${R('ถูกถามระดับชั้นซ้ำ ≥2 ครั้ง',PCT(ig,'ask2','leads'),PCT(fb,'ask2','leads'),'—','ยังไม่ได้วัดฝั่ง LINE')}
+  ${R('แอดมินพิมพ์ตอบครั้งแรก (ค่ากลาง)',ig?durR(ig.ftMed,ig.rngFt):'—',fb?durR(fb.ftMed,fb.rngFt):'—',ln?durR(ln.first_med,ln.rngFt):'—','LINE เร็วกว่าอีกสองช่องทางหลายเท่า')}
+  ${R('— p90 (หางยาว)',ig?durR(ig.ftP90,ig.rngP90):'—',fb?durR(fb.ftP90,fb.rngP90):'—',ln?durR(ln.first_p90,ln.rngP90):'—','ลีดที่รอนานที่สุด 10% สุดท้าย')}
+  ${R('ลูกค้าพิมพ์ เฉลี่ยต่อแชท',V(ig,'mc'),V(fb,'mc'),V(ln,'mc'),'')}
+  ${R('แอดมินพิมพ์เอง เฉลี่ยต่อแชท',V(ig,'mh'),V(fb,'mh'),V(ln,'mh'),'')}
+  ${R('ข้อความอัตโนมัติ / บอท เฉลี่ยต่อแชท',V(ig,'ma'),V(fb,'ma'),V(ln,'ma'),'IG/FB = ข้อความสำเร็จรูป · LINE = ข้อความบอท')}
   </tbody></table></div>`;
 }
 
@@ -620,19 +727,6 @@ function renderChat(){
  }
  $('#thread').innerHTML=html;$('#thread').scrollTop=0;
 }
-function fbRawPanel(){
- const f=AGG.fb['2026-07'];
- return `<p class="note">แชท Facebook เดือนกรกฎาคม <b>${nf(f.threads)} แชท / ${nf(f.msgs)} ข้อความ</b> ถูกเก็บครบทุกข้อความไว้ในสเปรดชีตแยกของ Facebook — ไม่ได้ฝังไว้ในหน้านี้เพราะขนาดใหญ่เกินกว่าจะเปิดไหวในหน้าเว็บเดียว เปิดจากชีตจะค้นและกรองได้เร็วกว่า</p>
- <div class="kpis" style="margin-bottom:14px">
-  ${K('ok','ปิดการขายได้',nf(f.closed),'แชท','กรองคอลัมน์ “ป้าย Meta” = ปิดการขาย')}
-  ${K('risk','ไม่เคยได้คุยกับ Admin',nf(f.notyped),'แชท','กรองคอลัมน์ “แอดมินพิมพ์เอง” = 0')}
-  ${K('risk','ทักมาแล้วหาย (ไม่มีใครตอบต่อ)',nf(f.unans),'แชท','กรองคอลัมน์ “ค้างไม่ตอบ” = Y')}
-  ${K('warn','ถูกถามระดับชั้นซ้ำ',nf(f.ask2),'แชท','กรองคอลัมน์ “ถามชั้นซ้ำ” ≥ 2')}
- </div>
- <a class="big" href="${SHEET_FB}" target="_blank" rel="noopener">
-  <span class="lab">Google Sheets</span><h3>เปิดคลังแชท Facebook ↗</h3>
-  <p>แท็บ <b>สรุปรายแชท</b> — ${nf(f.threads)} แชท พร้อมกลุ่ม สาเหตุ เวลาตอบ และป้ายสถานะจาก Meta · แท็บ <b>ข้อความทั้งหมด</b> — ${nf(f.msgs)} ข้อความเรียงตามแชท ไม่ตัดทอน</p></a>`;
-}
 function needFiles(){if(CH==='ig')return IGFULL?[]:['ig-all'];
  if(CH==='fb')return fbMonths().filter(k=>!FBFULL[k]).map(k=>'fb-'+k);
  return [];}
@@ -669,12 +763,15 @@ function renderRaw(){
   renderList();renderChat();
   return;
  }
- el.innerHTML=`<p class="note">ข้อมูลดิบของสองช่องทางเก็บคนละที่ เพราะโครงข้อมูลต่างกัน — เลือกช่องทางด้านบนเพื่อเปิดดู</p>
+ const ig=chSum('ig'), fb=chSum('fb'), ln=chSum('line');
+ el.innerHTML=`<p class="note">ข้อมูลดิบของแต่ละช่องทางเก็บคนละที่ เพราะโครงข้อมูลต่างกัน — กดปุ่มช่องทางด้านบนเพื่อเปิดอ่านบทสนทนาเต็มของช่องทางนั้น</p>
  <div class="kpis">
   <div class="k"><span class="lab">Instagram</span><div class="v" style="font-size:17px">อ่านได้ในหน้านี้</div>
-   <div class="s">281 ลีด พร้อมบทสนทนาเต็มทุกข้อความ ค้นด้วยชื่อบัญชีได้ — กดปุ่ม Instagram ด้านบน</div></div>
+   <div class="s">${ig?nf(ig.leads)+' ลีด / '+nf(ig.msgs)+' ข้อความ':'ไม่มีข้อมูลในช่วงที่เลือก'} พร้อมบทสนทนาเต็มทุกข้อความ ค้นด้วยชื่อบัญชีได้</div></div>
   <div class="k"><span class="lab">Facebook</span><div class="v" style="font-size:17px">อ่านได้ในหน้านี้</div>
-   <div class="s">4,067 แชท / 51,876 ข้อความ พร้อมบทสนทนาเต็ม ค้นด้วยชื่อลูกค้าได้ — กดปุ่ม Facebook ด้านบน</div></div>
+   <div class="s">${fb?nf(fb.threads)+' แชท / '+nf(fb.msgs)+' ข้อความ':'ไม่มีข้อมูลในช่วงที่เลือก'} พร้อมบทสนทนาเต็ม ค้นด้วยชื่อลูกค้าได้</div></div>
+  <div class="k"><span class="lab">LINE OA</span><div class="v" style="font-size:17px">อ่านได้ในหน้านี้</div>
+   <div class="s">${ln?nf(ln.threads)+' ห้อง / '+nf(ln.msgs)+' ข้อความ':'ไม่มีข้อมูลในช่วงที่เลือก'} พร้อมบทสนทนาเต็ม และปุ่มเปิดห้องจริงใน LINE OA Manager</div></div>
  </div>`;
 }
 
@@ -690,14 +787,14 @@ const LN_FDESC={
  open:'ห้องที่ทีมติดแท็ก <b>Q-ยังไม่สมัคร</b> — คือกลุ่มที่ยังตามต่อได้',
  notag:'ห้องที่<b>ยังไม่ได้ติดแท็กสถานะใด ๆ</b> — ตกสำรวจจากระบบแท็กของทีม'};
 let LN_F='all', LN_TERM='', LN_PAGE=0, LN_SEL=0, LN_DEEP=false; const LN_PER=25;
-const lnRooms=()=>((LINEFULL[M]||{}).rooms)||[];
-const lnDict=()=>((LINEFULL[M]||{}).dict)||[];
-const lnTxt=v=>typeof v==='number'?(lnDict()[v]||''):v;
-const lnLink=id=>'https://chat.line.biz/'+((LINEFULL[M]||{}).bot||LINEBOT)+'/chat/'+id;
+function lnRooms(){const o=[];for(const k of lineMonths()){const d=LINEFULL[k];
+ if(d&&d.rooms)for(const r of d.rooms)o.push(r);}return o;}
+const lnTxt=(v,m)=>typeof v==='number'?((((LINEFULL[m]||{}).dict)||[])[v]||''):v;
+const lnLink=(id,m)=>'https://chat.line.biz/'+((LINEFULL[m]||{}).bot||LINEBOT)+'/chat/'+id;
 function lnHit(o,t){if(!t)return true;
  if((o.n||'').toLowerCase().includes(t))return true;
  if((o.ad||[]).join(' ').toLowerCase().includes(t))return true;
- if(LN_DEEP)return o.tr.some(m=>String(lnTxt(m[2])).toLowerCase().includes(t));
+ if(LN_DEEP)return o.tr.some(m=>String(lnTxt(m[2],o._m)).toLowerCase().includes(t));
  return false;}
 function lnFiltered(){const t=LN_TERM.trim().toLowerCase();
  return lnRooms().filter(o=>{
@@ -716,7 +813,8 @@ function lnCount(f){const t=LN_TERM.trim().toLowerCase();
   if(f==='notag')return o.st==='ไม่ติดแท็ก'&&lnHit(o,t);
   return lnHit(o,t);}).length;}
 function lnShell(){
- return `<p class="note lnnote">แชท LINE OA <b>${MLABEL[M]||''}</b> — ${nf(lnRooms().length)} ห้อง พร้อมบทสนทนาเต็มทุกข้อความ · <b>เขียว</b> = แอดมินตัวจริง (มีชื่อกำกับ) · <b>เทา</b> = บอทตอบอัตโนมัติ · เวลาตอบนับเฉพาะแอดมินตัวจริง · ทุกห้องกดปุ่ม <b>เปิดห้องแชทนี้</b> เข้าห้องจริงใน LINE OA Manager ได้ทันที (ต้องล็อกอิน LINE Business ID อยู่) · <a href="${SHEET_LINE}" target="_blank" rel="noopener">เปิดสเปรดชีตต้นทาง ↗</a></p>
+ const multi=lineMonths().length>1;
+ return `<p class="note lnnote">แชท LINE OA <b>${esc(moLabel())}</b> — ${nf(lnRooms().length)} ห้อง พร้อมบทสนทนาเต็มทุกข้อความ${multi?' · <b>โหมดทุกเดือนรวมกัน</b> โหลดข้อมูลทั้ง '+lineMonths().length+' เดือน ครั้งแรกจึงช้ากว่าปกติ · ห้องเดียวกันที่คุยหลายเดือนจะขึ้นหนึ่งรายการต่อหนึ่งเดือน (ดูป้ายเดือนที่แต่ละรายการ)':''} · <b>เขียว</b> = แอดมินตัวจริง (มีชื่อกำกับ) · <b>เทา</b> = บอทตอบอัตโนมัติ · เวลาตอบนับเฉพาะแอดมินตัวจริง · ทุกห้องกดปุ่ม <b>เปิดห้องแชทนี้</b> เข้าห้องจริงใน LINE OA Manager ได้ทันที (ต้องล็อกอิน LINE Business ID อยู่) · <a href="${SHEET_LINE}" target="_blank" rel="noopener">เปิดสเปรดชีตต้นทาง ↗</a></p>
  <div class="md"><div class="pane"><div class="ptop">
   <input id="lnq" type="search" placeholder="ค้นหาชื่อลูกค้า หรือชื่อแอดมิน…" aria-label="ค้นหา" value="${esc(LN_TERM)}">
   <div class="chips" id="lnchips">${LN_FORDER.map(k=>`<button class="chip" data-f="${k}" aria-pressed="${LN_F===k}">${LN_FNAME[k]} (${nf(lnCount(k))})</button>`).join('')}</div>
@@ -736,6 +834,7 @@ function lnRenderList(){
   if(o.hg)fl.push('<span class="badge risk">ทักมาแล้วหาย</span>');
   if(o.st==='สมัครแล้ว')fl.push('<span class="badge ok">สมัครแล้ว</span>');
   else if(o.st!=='ไม่ติดแท็ก')fl.push('<span class="badge">'+esc(o.st)+'</span>');
+  if(lineMonths().length>1)fl.push('<span class="badge">'+(MSHORT[o._m]||o._m||'')+'</span>');
   fl.push('<span class="badge">ตอบครั้งแรก '+dur(o.r1)+'</span>');
   (o.ad||[]).slice(0,3).forEach(a=>fl.push('<span class="badge">👤 '+esc(a)+'</span>'));
   return `<button class="prow" data-i="${gi}" aria-current="${gi===LN_SEL}">
@@ -752,8 +851,8 @@ function lnRenderList(){
 function lnRenderChat(){
  const rows=lnFiltered(), o=rows[LN_SEL];
  if(!o){$('#lnhead').innerHTML='';$('#lnthread').innerHTML='<div class="empty">เลือกห้องแชททางซ้ายเพื่ออ่านบทสนทนา</div>';return;}
- $('#lnhead').innerHTML=`<h3>${esc(o.n||'(ไม่มีชื่อ)')}<a class="inbtn" href="${lnLink(o.id)}" target="_blank" rel="noopener">เปิดห้องแชทนี้ ↗</a></h3>
-  <p class="lab">${esc(o.f)} → ${esc(o.t)} · ${o.tr.length} ข้อความ · ตอบครั้งแรก ${dur(o.r1)} · ตอบกลาง ${dur(o.rm)} · นานสุด ${dur(o.rw)}</p>
+ $('#lnhead').innerHTML=`<h3>${esc(o.n||'(ไม่มีชื่อ)')}<a class="inbtn" href="${lnLink(o.id,o._m)}" target="_blank" rel="noopener">เปิดห้องแชทนี้ ↗</a></h3>
+  <p class="lab">${MLABEL[o._m]||''} · ${esc(o.f)} → ${esc(o.t)} · ${o.tr.length} ข้อความ · ตอบครั้งแรก ${dur(o.r1)} · ตอบกลาง ${dur(o.rm)} · นานสุด ${dur(o.rw)}</p>
   <p class="lab">ดูแลโดย ${esc(o.ow||'-')}${(o.ad||[]).length?' · ตอบจริง '+o.ad.map(esc).join(', '):''}${(o.tg||[]).length?'<br>แท็ก: '+o.tg.map(esc).join(' · '):''}</p>`;
  let html='',lastDay='';
  for(const e of o.tr){
@@ -761,58 +860,94 @@ function lnRenderChat(){
   if(day!==lastDay){html+=`<div class="daysep">— ${day} —</div>`;lastDay=day;}
   const cls=who==='C'?'r0':(who==='B'?'r2':'r1');
   const tag=who==='C'?'':(who==='B'?'บอท':esc(who));
-  html+=`<div class="msg ${cls}"><div class="bub">${tag?'<b class="tplmark">'+tag+'</b>':''}${esc(lnTxt(e[2]))}</div><span class="ts">${time}</span></div>`;}
+  html+=`<div class="msg ${cls}"><div class="bub">${tag?'<b class="tplmark">'+tag+'</b>':''}${esc(lnTxt(e[2],o._m))}</div><span class="ts">${time}</span></div>`;}
  $('#lnthread').innerHTML=html;$('#lnthread').scrollTop=0;}
 function lnRenderRaw(){
  const el=$('#raw');
- if(!LINEFULL[M]){const mo=M;
-  el.innerHTML='<div class="empty">กำลังโหลดข้อมูลแชท… <span class="lab">LINE OA</span></div>';
-  getFile('line-'+mo).then(function(d){LINEFULL[mo]=d;if(CH==='line'&&M===mo)lnRenderRaw();})
-   .catch(function(e){el.innerHTML='<div class="empty">โหลดข้อมูลแชทไม่สำเร็จ — '+esc(String((e&&e.message)||e))+
+ const need=lineMonths().filter(k=>!LINEFULL[k]);
+ if(need.length){
+  const mo=M,tot=need.length;let done=0;
+  const stale=()=>CH!=='line'||M!==mo;
+  const show=()=>{if(stale())return;
+   el.innerHTML='<div class="empty">กำลังโหลดข้อมูลแชท… <span class="lab">LINE OA</span>'+
+    (tot>1?'<div class="mt">'+done+' / '+tot+' เดือน — ทุกเดือนรวมกันเป็นข้อมูลก้อนใหญ่ ครั้งแรกอาจใช้เวลาสักครู่</div>':'')+'</div>';};
+  show();
+  (async function(){
+   for(const k of need){
+    const d=await getFile('line-'+k);
+    if(stale())return false;
+    (d.rooms||[]).forEach(function(r){r._m=k;});
+    LINEFULL[k]=d;done++;show();
+   }
+   return true;
+  })().then(function(ok){if(ok&&!stale())lnRenderRaw();
+  }).catch(function(e){if(stale())return;
+   el.innerHTML='<div class="empty">โหลดข้อมูลแชทไม่สำเร็จ — '+esc(String((e&&e.message)||e))+
     '<div><button class="fixbtn" onclick="location.reload()">ลองใหม่</button></div></div>';});
   return;}
+ if(!lnRooms().length){el.innerHTML='<div class="empty">ไม่มีข้อมูล LINE ในช่วงที่เลือก</div>';return;}
  el.innerHTML=lnShell();
  $('#lnq').addEventListener('input',e=>{LN_TERM=e.target.value;LN_PAGE=0;LN_SEL=0;lnRenderList();lnRenderChat();});
  $('#lndeep').addEventListener('change',e=>{LN_DEEP=e.target.checked;LN_PAGE=0;LN_SEL=0;lnRenderList();lnRenderChat();});
  el.querySelectorAll('#lnchips .chip').forEach(c=>c.addEventListener('click',()=>{LN_F=c.dataset.f;LN_PAGE=0;LN_SEL=0;lnRenderRaw();}));
  lnRenderList();lnRenderChat();}
+function lnBar(lab,v,max,extra){return `<div class="lnbar"><span>${esc(lab)}</span><span class="track"><span class="t" style="width:${max?Math.max(2,Math.round(v*100/max)):0}%"></span></span><span>${nf(v)}${extra||''}</span></div>`;}
+function lnPanels(a){
+ const w=$('#lnwork'), hh=$('#lnhour'), tg=$('#lntag');
+ if(!a){if(w)w.innerHTML='';if(hh)hh.innerHTML='';if(tg)tg.innerHTML='';return;}
+ const adm=a.admins||[], hrs=a.hours||[], tags=a.tags||[];
+ const amax=adm.reduce((m,x)=>Math.max(m,x[1]),0);
+ const hmax=hrs.reduce((m,x)=>Math.max(m,x[1]),0);
+ const tmax=tags.reduce((m,x)=>Math.max(m,x[1]),0);
+ if(w)w.innerHTML=`<p class="note">จำนวนห้องที่แอดมินแต่ละคนเข้าไปตอบใน<b>${esc(moLabel())}</b> (ห้องหนึ่งมีได้หลายคน) — ตัวเลขท้ายแถวคือจำนวนข้อความที่พิมพ์เอง${lnDupNote()}</p>
+  <div class="lnwrap">${adm.map(x=>lnBar(x[0],x[1],amax,' ห้อง · '+nf(x[2])+' ข้อความ')).join('')||'<p class="note">ไม่มีข้อมูล</p>'}</div>`;
+ if(hh)hh.innerHTML=`<p class="note">ช่วงเวลาที่ลูกค้าพิมพ์เข้ามาใน LINE OA (เวลาไทย) — ใช้จัดกะแอดมินได้</p>
+  <div class="lnwrap">${hrs.filter(x=>x[1]>0).map(x=>lnBar(String(x[0]).padStart(2,'0')+':00',x[1],hmax,' ข้อความ')).join('')||'<p class="note">ไม่มีข้อมูล</p>'}</div>`;
+ if(tg)tg.innerHTML=`<p class="note">แท็กที่ทีมติดไว้เองใน LINE OA — ใช้เป็นตัวชี้ความสนใจคอร์สได้เลย ไม่ต้องเดาจากข้อความ${lnDupNote()}</p>
+  <div class="lnwrap">${tags.map(x=>lnBar(x[0],x[1],tmax,' ห้อง')).join('')||'<p class="note">ไม่มีข้อมูล</p>'}</div>`;
+}
 function lnOverview(){
- const a=AGG.line[M]||{}, tot=a.threads||0;
- const bar=(lab,v,max,extra)=>`<div class="lnbar"><span>${esc(lab)}</span><span class="track"><span class="t" style="width:${max?Math.max(2,Math.round(v*100/max)):0}%"></span></span><span>${nf(v)}${extra||''}</span></div>`;
- const amax=(a.admins||[]).reduce((m,x)=>Math.max(m,x[1]),0);
- const hmax=(a.hours||[]).reduce((m,x)=>Math.max(m,x[1]),0);
+ const a=chSum('line');
+ if(!a){$('#key').innerHTML='<div class="callout"><h4>ไม่มีข้อมูล LINE ในช่วงที่เลือก</h4><p>ลองเปลี่ยนเดือนด้านบน</p></div>';
+  $('#kpi').innerHTML='';lnPanels(null);return;}
+ const tot=a.threads||0, fb=chSum('fb');
+ const multi=a.n>1;
  $('#key').innerHTML=`<div class="cards">
-  <div class="card ok"><h3>แอดมิน LINE ตอบเร็วกว่า Facebook ราว 10 เท่า</h3>
-   <p>ตอบครั้งแรกกลาง ๆ <b>${dur(a.first_med)}</b> ขณะที่ Facebook เดือนเดียวกันอยู่ที่ <b>7.8 นาที</b> · ช้าสุด 10% ของห้องยังอยู่ที่ <b>${dur(a.first_p90)}</b> เท่านั้น</p></div>
+  <div class="card ok"><h3>แอดมิน LINE ตอบเร็วกว่า Facebook หลายเท่า</h3>
+   <p>ตอบครั้งแรกค่ากลาง <b>${durR(a.first_med,a.rngFt)}</b>${fb?` ขณะที่ Facebook ในช่วงเดียวกันอยู่ที่ <b>${durR(fb.ftMed,fb.rngFt)}</b>`:''} · ช้าสุด 10% ของห้องยังอยู่ที่ <b>${durR(a.first_p90,a.rngP90)}</b> เท่านั้น${multi?' <span class="lab">(ค่ากลางรวมข้ามเดือนไม่ได้ จึงแสดงเป็นช่วงต่ำสุด–สูงสุดของรายเดือน)</span>':''}</p></div>
   <div class="card ok"><h3>แทบไม่มีใครหลุดมือ</h3>
    <p>มีเพียง <b>${nf(a.notyped)} ห้องจาก ${nf(tot)}</b> (${pc(a.notyped,tot)}) ที่ไม่เคยได้คุยกับแอดมินตัวจริงเลย</p></div>
   <div class="card risk"><h3>ยังมี ${nf(a.unans)} ห้องที่ลูกค้าถามค้างไว้แล้วเงียบ</h3>
    <p>${pc(a.unans,tot)} ของห้องทั้งหมด — ข้อความสุดท้ายเป็นของลูกค้าและไม่มีแอดมินตอบต่อ กดแท็บ <b>ทักมาแล้วหาย</b> ในหน้าข้อมูลดิบเพื่อไล่เก็บ</p></div>
   <div class="card warn"><h3>ห้ามเอาตัวเลข “สมัครแล้ว” ไปเทียบกับ Facebook ตรง ๆ</h3>
-   <p>${nf(a.won)} ห้องติดแท็ก <b>Q-สมัครแล้ว</b> แต่แท็กนี้ติดที่ตัวห้อง <b>ไม่ผูกกับเดือน</b> — หลายห้องเป็นนักเรียนเก่าที่สมัครไปตั้งแต่เดือนก่อน แล้วเดือนนี้มาคุยเรื่องอื่น ต่างจากฝั่ง Facebook ที่นับเฉพาะดีลที่ปิดได้ภายในเดือนนั้น</p></div></div>`;
+   <p>${nf(a.won)} ห้องติดแท็ก <b>Q-สมัครแล้ว</b> แต่แท็กนี้ติดที่ตัวห้อง <b>ไม่ผูกกับเดือน</b> — หลายห้องเป็นนักเรียนเก่าที่สมัครไปตั้งแต่เดือนก่อน แล้วเดือนนี้มาคุยเรื่องอื่น ต่างจากฝั่ง Facebook ที่นับเฉพาะดีลที่ปิดได้ภายในเดือนนั้น</p></div>
+  ${multi?`<div class="card"><h3>โหมดทุกเดือนรวมกัน — อ่านตัวเลขอย่างไร</h3>
+   <p>ยอดด้านล่างคือผลรวมของ <b>${a.n} เดือน</b> (${esc(moLabel())}) โดยนับ<b>แยกตามเดือน</b> ห้องเดียวกันที่มีความเคลื่อนไหวหลายเดือนจึงถูกนับซ้ำในทุกเดือนที่คุย — เหมาะกับการดูปริมาณงานรวม ไม่ใช่จำนวนลูกค้าไม่ซ้ำหน้า</p></div>`:''}</div>`;
  $('#kpi').innerHTML=`
-  ${K('','ห้องแชททั้งหมด',nf(tot),'ห้อง','มีความเคลื่อนไหวอย่างน้อย 1 ข้อความในเดือนนี้')}
+  ${K('',multi?'ห้องแชททั้งหมด (รวมทุกเดือน)':'ห้องแชททั้งหมด',nf(tot),'ห้อง',multi?'นับแยกตามเดือน ห้องที่คุยหลายเดือนถูกนับซ้ำ':'มีความเคลื่อนไหวอย่างน้อย 1 ข้อความในเดือนนี้')}
   ${K('','ข้อความทั้งหมด',nf(a.msgs),'ข้อความ','ลูกค้า '+nf(a.cust)+' · แอดมิน '+nf(a.adm)+' · บอท '+nf(a.bot))}
-  ${K('ok','ตอบครั้งแรก (กลาง)',dur(a.first_med),'','นับเฉพาะแอดมินตัวจริง ไม่นับบอท')}
+  ${K('ok','ตอบครั้งแรก (ค่ากลาง)',durR(a.first_med,a.rngFt),'',multi?'ช่วงต่ำสุด–สูงสุดของค่ากลางรายเดือน':'นับเฉพาะแอดมินตัวจริง ไม่นับบอท')}
   ${K('ok','ติดแท็กสมัครแล้ว',nf(a.won),'ห้อง','อ่านคำเตือนด้านบนก่อนนำไปเทียบช่องทางอื่น')}
   ${K('warn','ยังไม่สมัคร',nf(a.open),'ห้อง','กลุ่มที่ยังตามต่อได้')}
   ${K('risk','ทักมาแล้วหาย',nf(a.unans),'ห้อง',pc(a.unans,tot)+' ของห้องทั้งหมด')}
   ${K('risk','ไม่เคยได้คุยกับ Admin',nf(a.notyped),'ห้อง','ทั้งห้องมีแต่บอท')}
-  ${K('warn','ยังไม่ติดแท็กสถานะ',nf(a.notag),'ห้อง','ตกสำรวจจากระบบแท็กของทีม')}`;
- $('#lnwork').innerHTML=`<p class="note">จำนวนห้องที่แอดมินแต่ละคนเข้าไปตอบในเดือนนี้ (ห้องหนึ่งมีได้หลายคน) — ตัวเลขท้ายแถวคือจำนวนข้อความที่พิมพ์เอง</p>
-  <div class="lnwrap">${(a.admins||[]).map(x=>bar(x[0],x[1],amax,' ห้อง · '+nf(x[2])+' ข้อความ')).join('')}</div>`;
- $('#lnhour').innerHTML=`<p class="note">ช่วงเวลาที่ลูกค้าพิมพ์เข้ามา (เวลาไทย) — ใช้จัดกะแอดมินได้</p>
-  <div class="lnwrap">${(a.hours||[]).filter(x=>x[1]>0).map(x=>bar(String(x[0]).padStart(2,'0')+':00',x[1],hmax,' ข้อความ')).join('')}</div>`;
- $('#lntag').innerHTML=`<p class="note">แท็กที่ทีมติดไว้เองใน LINE OA — ใช้เป็นตัวชี้ความสนใจคอร์สได้เลย ไม่ต้องเดาจากข้อความ</p>
-  <div class="lnwrap">${(a.tags||[]).map(x=>bar(x[0],x[1],(a.tags[0]||[0,1])[1],' ห้อง')).join('')}</div>`;}
+  ${K('warn','ยังไม่ติดแท็กสถานะ',nf(a.notag),'ห้อง','ตกสำรวจจากระบบแท็กของทีม')}
+  ${K('','ข้อความต่อห้อง',a.mc+' / '+a.mh+' / '+a.ma,'','ลูกค้า / แอดมิน / บอท')}`;
+ lnPanels(a);}
 
 /* ---------- orchestration ---------- */
-function renderOverview(){if(CH==='line'){lnOverview();return;}renderKey();renderKPI();renderCmp();renderFunnel();renderWhy();renderHours();}
+function renderOverview(){
+ if(CH==='line'){lnOverview();return;}
+ renderKey();renderKPI();renderCmp();renderFunnel();renderWhy();renderHours();
+ lnPanels(CH==='all'?chSum('line'):null);
+}
 function applyView(){
- const ov=VIEW==='ov', ln=CH==='line';
+ const ov=VIEW==='ov', ln=CH==='line', hasP=pool().length>0;
+ const lnOn=ov&&(ln||(CH==='all'&&lineA().length>0));
  ['s-key','s-kpi'].forEach(id=>{const e=document.getElementById(id);if(e)e.hidden=!ov;});
- ['s-cmp','s-fun','s-why','s-day'].forEach(id=>{const e=document.getElementById(id);if(e)e.hidden=!ov||ln;});
- ['s-lnwork','s-lnhour','s-lntag'].forEach(id=>{const e=document.getElementById(id);if(e)e.hidden=!ov||!ln;});
+ $('#s-cmp').hidden=!ov||ln;
+ ['s-fun','s-why','s-day'].forEach(id=>{const e=document.getElementById(id);if(e)e.hidden=!ov||ln||!hasP;});
+ ['s-lnwork','s-lnhour','s-lntag'].forEach(id=>{const e=document.getElementById(id);if(e)e.hidden=!lnOn;});
  $('#s-raw').hidden=ov;
  if(ov){renderOverview();}else{if(CH==='line'){lnRenderRaw();}else{renderRaw();}}
 }
