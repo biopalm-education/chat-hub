@@ -18,7 +18,7 @@ git -C "$REPO" config user.email "mkt.biopalm@gmail.com"
 
 cd "$HUB" && python3 build.py "$REPO"
 # keep the pipeline in the repo in sync with the local copies
-for f in app.html build.py deploy.sh extract.py; do [ -f "$HUB/$f" ] && cp "$HUB/$f" "$REPO/$f"; done
+for f in app.html build.py deploy.sh extract.py unpack.py mk_line.py; do [ -f "$HUB/$f" ] && cp "$HUB/$f" "$REPO/$f"; done
 
 cd "$REPO"
 git add -A
