@@ -323,8 +323,8 @@ const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');
 const nf=n=>(n==null?'—':Number(n).toLocaleString('en-US'));
 function dur(s){if(s==null)return '—';if(s<0)return 'ไม่เคยมีคนพิมพ์ตอบ';if(s<60)return s+' วิ';if(s<3600)return Math.round(s/60)+' นาที';if(s<86400)return (s/3600).toFixed(1)+' ชม.';return Math.round(s/86400)+' วัน';}
 const pc=(a,b)=>b?Math.round(a*1000/b)/10+'%':'—';
-function curDict(){return CH==='fb'?((FBFULL[M]||{}).dict||[]):((IGFULL||{}).dict||[]);}
-const txt=v=>typeof v==='number'?curDict()[v]:v;
+function dictOf(m){return CH==='fb'?((FBFULL[m===undefined?M:m]||{}).dict||[]):((IGFULL||{}).dict||[]);}
+const txt=(v,m)=>typeof v==='number'?dictOf(m)[v]:v;
 const sub=(s,nm)=>String(s).split('\u0001').join(nm||'ลูกค้า');
 const FBPAGE='691470034208676',FBBIZ='310165158296126';
 const INBOX='https://business.facebook.com/latest/inbox/all/?business_id='+FBBIZ+'&asset_id='+FBPAGE+'&mailbox_id='+FBPAGE;
@@ -350,6 +350,9 @@ function toast(m){let t=document.getElementById('bp-toast');
 let CH='all', M='all', VIEW='ov';
 let FILTER='all', TERM='', PAGE=0, SEL=0, DEEP=false; const PER=25;
 
+const rangeLabel=ks=>{if(!ks.length)return '';if(ks.length===1)return MLABEL[ks[0]];
+ const a=ks[0],b=ks[ks.length-1],ya=a.slice(0,4),yb=b.slice(0,4);
+ return (MSHORT[a]||'')+(ya!==yb?' '+ya:'')+'–'+(MSHORT[b]||'')+' '+yb;};
 const igMonths=()=>M==='all'?MKEYS.slice():(MKEYS.includes(M)?[M]:[]);
 const fbMonths=()=>M==='all'?FBKEYS.slice():(FBKEYS.includes(M)?[M]:[]);
 function sumA(list,f){let t=0;for(const a of list)t+=(a[f]||0);return t;}
@@ -364,19 +367,16 @@ function buildMonths(){
  if(CH==='line'){M=LINEKEYS.includes(M)?M:LINEKEYS[LINEKEYS.length-1];
   $('#msel').innerHTML=LINEKEYS.map(k=>`<option value="${k}"${k===M?' selected':''}>${MLABEL[k]}</option>`).join('');return;}
  if(!keys.includes(M)&&M!=='all')M=keys[keys.length-1];
- if(CH==='fb'&&M==='all')M='2026-07';
- const opts=(CH==='fb'?[]:[['all','ทุกเดือนรวมกัน']]).concat(keys.map(k=>[k,MLABEL[k]]));
+ const opts=[['all','ทุกเดือนรวมกัน']].concat(keys.map(k=>[k,MLABEL[k]]));
  $('#msel').innerHTML=opts.map(([v,l])=>`<option value="${v}"${v===M?' selected':''}>${l}</option>`).join('');
 }
 function scopeText(){
  if(CH==='line'){const a=lineA(),t=sumA(a,'threads'),m=sumA(a,'msgs');
   return `กำลังดู <b>LINE OA</b> · <b>${MLABEL[M]||''}</b><br>${nf(t)} แชท · ${nf(m)} ข้อความ · ดึงจาก LINE Official Account Manager`;}
  const p=pool(), th=sumA(p,'threads'), ms=sumA(p,'msgs');
- const mo=M==='all'?'ม.ค.–ก.ค. 2026':MLABEL[M];
- let extra='';
- if(CH==='all'&&M==='all')extra=' · Facebook มีเฉพาะ ก.ค.';
- if(CH==='fb')extra=' · Facebook มีเฉพาะ ก.ค. 2026';
- return `กำลังดู <b>${CHN[CH]}</b> · <b>${mo}</b><br>${nf(th)} แชท · ${nf(ms)} ข้อความ${extra}`;
+ const uk=Array.from(new Set([].concat(CH!=='fb'?igMonths():[],CH!=='ig'?fbMonths():[]))).sort();
+ const mo=M==='all'?rangeLabel(uk):MLABEL[M];
+ return `กำลังดู <b>${CHN[CH]}</b> · <b>${mo}</b><br>${nf(th)} แชท · ${nf(ms)} ข้อความ`;
 }
 function setNow(){$('#now').innerHTML=scopeText();
  $('#keyscope').textContent=CHN[CH]+' · '+(M==='all'?'ทุกเดือน':MLABEL[M]);
@@ -516,33 +516,34 @@ function renderHours(){
 
 /* ---------- raw: IG chat browser ---------- */
 function leads(){const o=[];
- if(CH==='fb'){const d=FBFULL[M];if(d)for(const r of d.chats)o.push({m:M,r});return o;}
+ if(CH==='fb'){for(const k of fbMonths()){const d=FBFULL[k];if(d)for(const r of d.chats)o.push({m:k,r});}return o;}
  if(!IGFULL)return o;
  for(const k of igMonths()){const mm=IGFULL.months[k];if(mm)for(const r of mm.leads)o.push({m:k,r});}
  return o;}
 const norm=s=>String(s==null?'':s).toLowerCase().replace(/^[@\s]+/,'').replace(/\s+$/,'');
 const hitName=(r,t)=>norm(r[0]).includes(t);
-const hitBody=(r,t)=>(r[18]||[]).some(e=>String(txt(e[2])).toLowerCase().includes(t));
-const hitTerm=(r,t)=>!t||hitName(r,t)||(DEEP&&hitBody(r,t));
+const hitBody=(r,t,m)=>(r[18]||[]).some(e=>String(txt(e[2],m)).toLowerCase().includes(t));
+const hitTerm=(r,t,m)=>!t||hitName(r,t)||(DEEP&&hitBody(r,t,m));
 function hitChip(r,f){if(f==='leadsonly')return ['S2','S3','S4','S5'].indexOf(r[1])>=0;if(f==='nohuman')return r[10]<0;if(f==='risk')return r[12]===1;
  if(f==='price')return r[15]===1;if(f==='dup')return r[14]>=2;if(f==='won')return r[17]===1;return true;}
-function filtered(){const t=norm(TERM);return leads().filter(o=>hitTerm(o.r,t)&&hitChip(o.r,FILTER));}
+function filtered(){const t=norm(TERM);return leads().filter(o=>hitTerm(o.r,t,o.m)&&hitChip(o.r,FILTER));}
 function everywhere(t){let n=0;
- if(CH==='fb'){const d=FBFULL[M];if(d)for(const r of d.chats)if(hitTerm(r,t))n++;return n;}
+ if(CH==='fb'){for(const k of FBKEYS){const d=FBFULL[k];if(d)for(const r of d.chats)if(hitTerm(r,t,k))n++;}return n;}
  if(!IGFULL)return 0;
- for(const k of MKEYS){const mm=IGFULL.months[k];if(mm)for(const r of mm.leads)if(hitTerm(r,t))n++;}
+ for(const k of MKEYS){const mm=IGFULL.months[k];if(mm)for(const r of mm.leads)if(hitTerm(r,t,k))n++;}
  return n;}
 function emptyMsg(){
  const t=norm(TERM); let body='ไม่พบแชทที่ตรงกับเงื่อนไข', act='';
  if(t){
-  const inTab=leads().filter(o=>hitTerm(o.r,t)).length, all=everywhere(t);
+  const inTab=leads().filter(o=>hitTerm(o.r,t,o.m)).length, all=everywhere(t);
   if(inTab>0&&FILTER!=='all'){body='พบ '+inTab+' แชทที่ชื่อตรงกับ “'+esc(TERM)+'” แต่ถูกตัวกรองซ่อนไว้';act='<button class="fixbtn" data-act="chip">ล้างตัวกรอง</button>';}
   else if(all>0&&M!=='all'){body='ไม่พบใน'+MLABEL[M]+' — แต่พบ '+all+' แชทในเดือนอื่น';act='<button class="fixbtn" data-act="all">ดูทุกเดือน</button>';}
   else if(all===0&&!DEEP){body='ไม่พบบัญชีชื่อ “'+esc(TERM)+'”';act='<button class="fixbtn" data-act="deep">ลองค้นในข้อความแชทด้วย</button>';}
  }
  return '<div class="empty">'+body+(act?'<div>'+act+'</div>':'')+'</div>';
 }
-function fbNote(){return `<p class="note">แชท Facebook กรกฎาคม 2026 — <b>4,067 แชท / 51,876 ข้อความ</b> ฝังครบทุกข้อความในหน้านี้แล้ว ค้นด้วยชื่อลูกค้าได้ทันที · รายการนี้รวม<b>ทุกแชท</b> รวมกลุ่ม S0/S1 ที่ตัวเลขสรุปด้านบนไม่นับเป็นลีด · ห้องที่มีป้าย <b>🔗 ลิงก์ตรง</b> กดปุ่ม <b>เปิดแชทนี้ใน Inbox</b> ที่หัวแชทแล้วเข้าห้องนั้นได้ทันที (ตอนนี้ทำไว้ ${Object.keys(FBU).length} ห้องแรกของกลุ่มปิดการขาย กำลังทยอยเพิ่ม) · ห้องที่ยังไม่มี ปุ่มจะคัดลอกชื่อลูกค้าให้แล้วเปิดกล่องข้อความ วางในช่องค้นหาเพื่อเข้าห้องนั้น · <a href="${SHEET_FB}" target="_blank" rel="noopener">เปิดสเปรดชีตต้นทาง ↗</a></p>`;}
+function fbNote(){const a=fbA(),th=sumA(a,'threads'),ms=sumA(a,'msgs'),mo=M==='all'?rangeLabel(FBKEYS):MLABEL[M];
+ return `<p class="note">แชท Facebook <b>${mo}</b> — <b>${nf(th)} แชท / ${nf(ms)} ข้อความ</b> ฝังครบทุกข้อความในหน้านี้แล้ว ค้นด้วยชื่อลูกค้าได้ทันที · รายการนี้รวม<b>ทุกแชท</b> รวมกลุ่ม S0/S1 ที่ตัวเลขสรุปด้านบนไม่นับเป็นลีด${M==='all'?' · <b>โหมดทุกเดือนรวมกัน</b> ต้องโหลดข้อมูลทั้ง '+FBKEYS.length+' เดือน ครั้งแรกจึงช้ากว่าปกติ และการติ๊ก “ค้นในเนื้อข้อความด้วย” จะหน่วงบ้างเพราะไล่อ่านทุกข้อความ':''} · ห้องที่มีป้าย <b>🔗 ลิงก์ตรง</b> กดปุ่ม <b>เปิดแชทนี้ใน Inbox</b> ที่หัวแชทแล้วเข้าห้องนั้นได้ทันที (ตอนนี้ทำไว้ ${Object.keys(FBU).length} ห้องแรกของกลุ่มปิดการขาย กำลังทยอยเพิ่ม) · ห้องที่ยังไม่มี ปุ่มจะคัดลอกชื่อลูกค้าให้แล้วเปิดกล่องข้อความ วางในช่องค้นหาเพื่อเข้าห้องนั้น · <a href="${SHEET_FB}" target="_blank" rel="noopener">เปิดสเปรดชีตต้นทาง ↗</a></p>`;}
 function igBrowserShell(){
  return `${CH==='fb'?fbNote():''}<div class="md">
  <div class="pane"><div class="ptop">
@@ -615,7 +616,7 @@ function renderChat(){
   const s=stamp(e[0],o.m);
   if(s.d!==lastDay){html+=`<div class="daysep">— ${s.day} —</div>`;lastDay=s.d;}
   const tag=e[1]===2?'สำเร็จรูป':(e[1]===3?'บรอดแคสต์':'');
-  html+=`<div class="msg r${e[1]}"><div class="bub">${tag?'<b class="tplmark">'+tag+'</b>':''}${esc(sub(txt(e[2]),r[0]))}</div><span class="ts">${s.time}</span></div>`;
+  html+=`<div class="msg r${e[1]}"><div class="bub">${tag?'<b class="tplmark">'+tag+'</b>':''}${esc(sub(txt(e[2],o.m),r[0]))}</div><span class="ts">${s.time}</span></div>`;
  }
  $('#thread').innerHTML=html;$('#thread').scrollTop=0;
 }
@@ -632,18 +633,30 @@ function fbRawPanel(){
   <span class="lab">Google Sheets</span><h3>เปิดคลังแชท Facebook ↗</h3>
   <p>แท็บ <b>สรุปรายแชท</b> — ${nf(f.threads)} แชท พร้อมกลุ่ม สาเหตุ เวลาตอบ และป้ายสถานะจาก Meta · แท็บ <b>ข้อความทั้งหมด</b> — ${nf(f.msgs)} ข้อความเรียงตามแชท ไม่ตัดทอน</p></a>`;
 }
-function needFile(){if(CH==='ig')return IGFULL?null:'ig-all';if(CH==='fb')return FBFULL[M]?null:'fb-'+M;return null;}
+function needFiles(){if(CH==='ig')return IGFULL?[]:['ig-all'];
+ if(CH==='fb')return fbMonths().filter(k=>!FBFULL[k]).map(k=>'fb-'+k);
+ return [];}
 function renderRaw(){
  const el=$('#raw');
  if(CH==='ig'||CH==='fb'){
-  const need=needFile();
-  if(need){
-   const ch=CH,mo=M;
-   el.innerHTML='<div class="empty">กำลังโหลดข้อมูลแชท… <span class="lab">'+(ch==='fb'?'Facebook':'Instagram')+'</span></div>';
-   getFile(need).then(function(d){
-    if(ch==='ig')IGFULL=d;else FBFULL[mo]=d;
-    if(CH===ch&&(ch==='ig'||M===mo))renderRaw();
-   }).catch(function(e){
+  const need=needFiles();
+  if(need.length){
+   const ch=CH,mo=M,tot=need.length;let done=0;
+   const stale=()=>CH!==ch||(ch==='fb'&&M!==mo);
+   const show=()=>{if(stale())return;
+    el.innerHTML='<div class="empty">กำลังโหลดข้อมูลแชท… <span class="lab">'+(ch==='fb'?'Facebook':'Instagram')+'</span>'+
+     (tot>1?'<div class="mt">'+done+' / '+tot+' เดือน — ทุกเดือนรวมกันเป็นข้อมูลก้อนใหญ่ ครั้งแรกอาจใช้เวลาสักครู่</div>':'')+'</div>';};
+   show();
+   (async function(){
+    for(const nm of need){
+     const d=await getFile(nm);
+     if(stale())return false;
+     if(nm==='ig-all')IGFULL=d;else FBFULL[nm.slice(3)]=d;
+     done++;show();
+    }
+    return true;
+   })().then(function(ok){if(ok&&!stale())renderRaw();
+   }).catch(function(e){if(stale())return;
     el.innerHTML='<div class="empty">โหลดข้อมูลแชทไม่สำเร็จ — '+esc(String((e&&e.message)||e))+
      '<div><button class="fixbtn" onclick="location.reload()">ลองใหม่</button></div></div>';});
    return;
