@@ -1,3 +1,5 @@
+> **ตั้งแต่ 30 ก.ย. 2026 หน้านี้เป็นสำเนาของ [admin-hub](https://github.com/biopalm-education/admin-hub)** — ข้อมูลก๊อปอัตโนมัติวันละ 2 รอบด้วย `.github/workflows/clone-admin-hub.yml` เข้าด้วยรหัสเดียวกับ admin-hub · หน้าเว็บ (`app.html`) เป็นของ chat-hub เอง แก้ที่นี่ได้ · สคริปต์ build / deploy / tools เดิมด้านล่างใช้กับข้อมูลชุดเก่า ไม่ต้องรันแล้ว
+
 # chat-hub
 
 Dashboard สรุปแชท Instagram / Facebook ของ BioPalm — เปิดที่
