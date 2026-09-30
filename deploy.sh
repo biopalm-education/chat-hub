@@ -2,7 +2,7 @@
 # Rebuild the published site from src/ and push it to GitHub Pages.
 #   ./deploy.sh "ข้อความ commit"
 # ต้องมีไฟล์ gh_token.txt (GitHub fine-grained token, สิทธิ์ Contents: Read and write
-# บน repo biopalm-education/chat-hub) วางไว้ในโฟลเดอร์เดียวกับสคริปต์นี้
+# บน repo biopalm-education/admin-hub) วางไว้ในโฟลเดอร์เดียวกับสคริปต์นี้
 set -e
 HUB=$(cd "$(dirname "$0")" && pwd)
 REPO=$HOME/.chat-hub-deploy
