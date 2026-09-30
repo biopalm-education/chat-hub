@@ -1,0 +1,127 @@
+name: clone-admin-hub
+
+# chat-hub = สำเนาหน้าตาของ admin-hub (ค้างหน้าไว้ที่ 30 ก.ย. 2026) + ข้อมูลล่าสุดจาก admin-hub วันละ 2 รอบ
+# ข้อมูลก๊อปมาทั้งไฟล์ตามที่เข้ารหัสไว้ จึงเข้าด้วยชื่อผู้ใช้/รหัสผ่านเดียวกับ admin-hub
+# ไม่ต้องตั้ง secret · รันบนเซิร์ฟเวอร์ GitHub ทั้งหมด ไม่ใช้เครื่องผู้ใช้
+# lean หน้า admin-hub ทีหลังได้ หน้า chat-hub ไม่ถูกทับ (ติ๊ก rebuild_app เมื่ออยากก๊อปหน้าใหม่)
+
+on:
+  schedule:
+    - cron: '50 1 * * *'         # 08:50 น. เวลาไทย (หลังรอบอัปเดต admin-hub 06:20)
+    - cron: '50 14 * * *'        # 21:50 น. เวลาไทย
+  workflow_dispatch:
+    inputs:
+      rebuild_app:
+        description: 'ก๊อปหน้าเว็บจาก admin-hub ใหม่ (ทับหน้าของ chat-hub)'
+        type: boolean
+        default: false
+
+concurrency:
+  group: clone-admin-hub
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  pages: write
+
+env:
+  APP_PIN: '0f56df3'             # commit ของ admin-hub ที่ใช้เป็นหน้าเว็บ
+  HUB_TITLE: 'Chat Overview'     # ชื่อหน้าของ chat-hub
+
+jobs:
+  clone:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          path: ch
+
+      - name: ดึง admin-hub
+        run: git clone -q --filter=blob:none https://github.com/biopalm-education/admin-hub.git ah
+
+      - name: ก๊อปหน้าเว็บ + ข้อมูล
+        env:
+          REBUILD_APP: ${{ inputs.rebuild_app }}
+        run: |
+          python3 - <<'PY'
+          import os, json, shutil, subprocess, html
+          AH, CH = 'ah', 'ch'
+          PIN, T = os.environ['APP_PIN'], html.escape(os.environ['HUB_TITLE'])
+          MARK = '<!-- clone:admin-hub'
+          man = json.load(open(AH + '/manifest.json', encoding='utf-8'))
+          if len(man.get('files') or {}) < 10 or 'agg' not in man['files']:
+              raise SystemExit('admin-hub manifest ผิดปกติ — ไม่ก๊อป หน้าเดิมอยู่ต่อ')
+          want = set()
+          for name, p in man['files'].items():
+              r = p[2:] if p.startswith('./') else p
+              os.makedirs(os.path.dirname(CH + '/' + r), exist_ok=True)
+              shutil.copyfile(AH + '/' + r, CH + '/' + r)
+              want.add(r)
+          for f in sorted(os.listdir(CH + '/data')):
+              if f.endswith('.json') and 'data/' + f not in want:
+                  os.remove(CH + '/data/' + f)
+                  print('ลบไฟล์เก่า', f)
+          shutil.copyfile(AH + '/manifest.json', CH + '/manifest.json')
+          ap = CH + '/app.html'
+          cur = open(ap, encoding='utf-8').read() if os.path.exists(ap) else ''
+          if MARK not in cur or os.environ.get('REBUILD_APP') == 'true':
+              src = subprocess.check_output(['git', '-C', AH, 'show', PIN + ':app.html']).decode('utf-8')
+              for a, b, k in [('Admin Performance', T, 4),
+                              ('รายงานผลงานทีมแอดมิน BioPalm', 'ภาพรวมแชทลูกค้าและผลจากโฆษณา BioPalm', 1),
+                              ('<head>', '<head>\n' + MARK + '@' + PIN + ' -->', 1)]:
+                  if src.count(a) != k:
+                      raise SystemExit('หน้า admin-hub@%s ไม่ตรงที่คาด (%s)' % (PIN, a))
+                  src = src.replace(a, b)
+              cur = src
+              print('สร้างหน้าใหม่จาก admin-hub@' + PIN)
+          for f in ('app.html', 'index.html'):
+              open(CH + '/' + f, 'w', encoding='utf-8').write(cur)
+          open(CH + '/.nojekyll', 'a').close()
+          rp = CH + '/README.md'
+          rd = open(rp, encoding='utf-8').read() if os.path.exists(rp) else ''
+          if 'clone-admin-hub' not in rd:
+              open(rp, 'w', encoding='utf-8').write(
+                  '> **ตั้งแต่ 30 ก.ย. 2026 หน้านี้เป็นสำเนาของ [admin-hub](https://github.com/biopalm-education/admin-hub)** '
+                  '— ข้อมูลก๊อปอัตโนมัติวันละ 2 รอบด้วย `.github/workflows/clone-admin-hub.yml` '
+                  'เข้าด้วยรหัสเดียวกับ admin-hub · หน้าเว็บ (`app.html`) เป็นของ chat-hub เอง แก้ที่นี่ได้ · '
+                  'สคริปต์ build / deploy / tools เดิมด้านล่างใช้กับข้อมูลชุดเก่า ไม่ต้องรันแล้ว\n\n' + rd)
+          print('ไฟล์ข้อมูล %d ไฟล์ · ข้อมูล admin-hub build %s' % (len(want), man.get('built')))
+          PY
+
+      - name: มีอะไรเปลี่ยนไหม
+        id: diff
+        run: |
+          cd ch
+          git add -A
+          if git diff --cached --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "ไม่มีอะไรเปลี่ยน — ไม่ต้อง push"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            git diff --cached --stat | tail -30
+          fi
+
+      - name: push ขึ้น chat-hub
+        if: steps.diff.outputs.changed == 'true'
+        run: |
+          cd ch
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898283+github-actions[bot]@users.noreply.github.com'
+          git commit -q -m "ก๊อปจาก admin-hub · $(python3 -c "import json;print(json.load(open('manifest.json'))['built'])")"
+          if ! git push -q origin HEAD; then
+            git pull -q --rebase origin "$(git rev-parse --abbrev-ref HEAD)"
+            git push -q origin HEAD
+          fi
+          echo "pushed → https://biopalm-education.github.io/chat-hub/"
+
+      - name: สั่ง GitHub Pages build
+        if: steps.diff.outputs.changed == 'true'
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        run: |
+          curl -fsS -X POST -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/$REPO/pages/builds" >/dev/null \
+            && echo "สั่ง build แล้ว" || echo "สั่งเองไม่ได้ — Pages จะ build เองหลัง push"
